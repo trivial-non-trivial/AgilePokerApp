@@ -9,17 +9,30 @@ object Websockets extends cask.MainRoutes{
     "Hello World!"
   }
 
-  @cask.websocket("/connect/:userName")
-  def showUserProfile(userName: String): cask.WebsocketResult = {
+  @cask.websocket("/connect/:roomId")
+  def enterRoom(roomId: String): cask.WebsocketResult = {
 
-    println("in WS")
-    if (userName != "haoyi") cask.Response("", statusCode = 403)
-    else cask.WsHandler { channel =>
+    println(s"in WS for roomId : $roomId")
+    cask.WsHandler { channel =>
       cask.WsActor {
-        case cask.Ws.Text("!!!!!!!!!!") => channel.send(cask.Ws.Close())
+        case cask.Ws.Text("q!") => channel.send(cask.Ws.Close())
         case cask.Ws.Text(data) =>
           println(data)
-          channel.send(cask.Ws.Text(userName + " " + data))
+          channel.send(cask.Ws.Text(roomId + " " + data))
+      }
+    }
+  }
+
+  @cask.websocket("/room/:roomId/:userName")
+  def enterRoom(userName: String, roomId: String): cask.WebsocketResult = {
+
+    println(s"in WS in room : $roomId with user $userName")
+    cask.WsHandler { channel =>
+      cask.WsActor {
+        case cask.Ws.Text("q!") => channel.send(cask.Ws.Close())
+        case cask.Ws.Text(data) =>
+          println(data)
+          channel.send(cask.Ws.Text(roomId + " " + data))
       }
     }
   }
