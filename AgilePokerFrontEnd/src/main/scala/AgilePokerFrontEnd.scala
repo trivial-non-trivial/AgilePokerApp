@@ -1,11 +1,23 @@
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes._
 import com.raquo.laminar.modifiers._
+
 import org.scalajs.dom
-import io.laminext.websocket._
+import io.laminext.websocket.circe._
+import io.laminext.syntax.core._
+import io.laminext.fetch.circe._
+import io.circe._
+
+
 import org.scalajs.dom.{HTMLButtonElement, HTMLInputElement, MouseEvent}
 
 object AgilePokerFrontEnd {
+
+  case class Data(s: String)
+  implicit val codeData: Codec[Data] = Codec.from(
+    Decoder.decodeString.map(Data(_)),
+    Encoder.encodeString.contramap(_.s),
+  )
 
   private val roomId: Var[String] = Var("1234")
   private val userName: Var[String] = Var("")
@@ -15,8 +27,8 @@ object AgilePokerFrontEnd {
 
     val appContainer: dom.Element = dom.document.querySelector("#appContainer")
 
-    val ws: WebSocket[String, String] =
-      WebSocket.url(s"ws://localhost:8080/connect/${roomId.now()}").string.build(managed = true)
+    val ws: WebSocket[Data, Data] =
+      WebSocket.url(s"ws://localhost:8080/connect/${roomId.now()}").json[Data, Data].build()
 
     val enterButton: ReactiveHtmlElement[HTMLButtonElement] = button("Access room",
       cls := "button-3",
@@ -38,24 +50,24 @@ object AgilePokerFrontEnd {
   }
 
   def clicAction(appContainer:  dom.Element,
-                 ws: WebSocket[String, String],
+                 ws: WebSocket[Data, Data],
                  inputElement: ReactiveHtmlElement[HTMLInputElement],
-                 enterButton:  ReactiveHtmlElement[HTMLButtonElement]):  EventListener[MouseEvent, String]  = {
+                 enterButton:  ReactiveHtmlElement[HTMLButtonElement]):  EventListener[MouseEvent, Data]  = {
     onClick.map(_ => {
       userName.set(inputElement.ref.value)
       updateDom(appContainer, ws, inputElement, enterButton)
-      s"${roomId.now()}*${inputElement.ref.value}"
+      Data(s"${roomId.now()}*${inputElement.ref.value}")
     }) --> ws.send
   }
 
   def updateDom(appContainer:  dom.Element,
-                ws: WebSocket[String, String],
+                ws: WebSocket[Data, Data],
                 inputElement: ReactiveHtmlElement[HTMLInputElement],
                 enterButton:  ReactiveHtmlElement[HTMLButtonElement]): Unit = {
     render(appContainer, initElement(ws, inputElement, enterButton))
   }
 
-  def initElement(ws: WebSocket[String, String],
+  def initElement(ws: WebSocket[Data, Data],
                   inputElement: ReactiveHtmlElement[HTMLInputElement],
                   enterButton: ReactiveHtmlElement[HTMLButtonElement]): Div = {
 
@@ -73,7 +85,7 @@ object AgilePokerFrontEnd {
           div(h3("Connected : ", child.text <-- ws.isConnected)),
         ))
       case _ => {
-        div(label(child.text <--ws.received))
+        div(label(child.text <--ws.received.scanLeft("")(_ + _)))
       }
     }
   }
@@ -82,3 +94,5 @@ object AgilePokerFrontEnd {
 
 // 1) Run "fastOptJS" in sbt console to build js file
 // 2) open index.html
+
+// resync project in IDE = ~/.local/share/coursier/bin/mill mill.idea.GenIdea/idea
