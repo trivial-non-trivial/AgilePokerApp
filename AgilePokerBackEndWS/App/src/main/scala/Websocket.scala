@@ -1,6 +1,7 @@
 package app
 
 import cask.Logger.Console.globalLogger
+import upickle.default.{ReadWriter => RW, macroRW}
 
 object Websockets extends cask.MainRoutes{
 
@@ -18,7 +19,7 @@ object Websockets extends cask.MainRoutes{
         case cask.Ws.Text("q!") => channel.send(cask.Ws.Close())
         case cask.Ws.Text(data) =>
           println(data)
-          channel.send(cask.Ws.Text(roomId + " " + data))
+          channel.send(cask.Ws.Text(upickle.default.write(User(roomId + " " + data, "????"))))
       }
     }
   }
@@ -32,10 +33,15 @@ object Websockets extends cask.MainRoutes{
         case cask.Ws.Text("q!") => channel.send(cask.Ws.Close())
         case cask.Ws.Text(data) =>
           println(data)
-          channel.send(cask.Ws.Text(roomId + " " + data))
+          channel.send(cask.Ws.Text(upickle.default.write(User(roomId + " " + data, "????"))))
       }
     }
   }
 
   initialize()
+}
+
+case class User(userName: String, userId: String)
+object User{
+  implicit val rw: RW[User] = macroRW
 }
