@@ -1,3 +1,5 @@
+import com.raquo.laminar.api.L.Var
+
 object ElementBuilder {
 
   class CheckBoxBuilder {
@@ -27,5 +29,39 @@ object ElementBuilder {
 
   object CheckBoxBuilder {
       def apply(): CheckBoxBuilder = new CheckBoxBuilder
+  }
+
+  class ButtonBuilder {
+    private var cls: String = "button-3"
+    private var role: String = "button"
+    private var label: String = "Click me !"
+    private var disabledVar: Var[Boolean] = Var(false)
+
+    def withClass(cls : String): ButtonBuilder = {
+      this.cls = cls
+      this
+    }
+
+    def withRole(role : String): ButtonBuilder = {
+      this.role = role
+      this
+    }
+
+    def withLabel(label : String): ButtonBuilder = {
+      this.label = label
+      this
+    }
+
+    def withDisabledVar(disabledVar: Var[Boolean]): ButtonBuilder = {
+      this.disabledVar = disabledVar
+      this
+    }
+
+    def build(): ElementFactory.Button =
+      ElementFactory.getButton(label, cls, role, disabledVar)
+  }
+
+  object ButtonBuilder {
+    def apply(): ButtonBuilder = new ButtonBuilder
   }
 }

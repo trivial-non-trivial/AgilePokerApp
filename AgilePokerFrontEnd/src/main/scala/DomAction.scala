@@ -1,0 +1,39 @@
+import com.raquo.laminar.api.L._
+import com.raquo.laminar.nodes.ReactiveHtmlElement
+import io.laminext.websocket.circe.WebSocket
+import org.scalajs.dom
+import org.scalajs.dom.{HTMLButtonElement, HTMLInputElement}
+
+object DomAction {
+  def renderDom(appContainer:  dom.Element,
+                ws: WebSocket[User, User],
+                inputElement: ReactiveHtmlElement[HTMLInputElement],
+                enterButton:  ReactiveHtmlElement[HTMLButtonElement],
+                userName: Var[String]): Unit = {
+    render(appContainer, createContent(ws, inputElement, enterButton, userName))
+  }
+
+  def createContent(ws: WebSocket[User, User],
+                    inputElement: ReactiveHtmlElement[HTMLInputElement],
+                    enterButton: ReactiveHtmlElement[HTMLButtonElement],
+                    userName: Var[String]): Div = {
+
+    val appContainer: dom.Element = dom.document.querySelector("#appContainer")
+    appContainer.children.foreach(c => appContainer.removeChild(c))
+
+    userName.now() match {
+      case "" => div(
+        h2("Register in Agile Poker", cls := "h2-1"),
+        div(cls := "form__group field",
+          ws.connect,
+          label("Name", cls := "form__label"),
+          div(inputElement),
+          enterButton,
+          div(h3("Connected : ", child.text <-- ws.isConnected)),
+        ))
+      case _ => {
+        div(label(child.text <--ws.received.map(data => data.userName)))
+      }
+    }
+  }
+}

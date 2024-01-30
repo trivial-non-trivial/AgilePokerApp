@@ -4,6 +4,10 @@ trait AgilePokerModule extends ScalaModule{
   def scalaVersion = "2.13.12"
 }
 
+//object AgilePokerApp extends AgilePokerModule {
+//  def moduleDeps = Seq(AgilePokerPublic, AgilePokerBackEndWS, AgilePokerFrontEnd)
+//}
+
 object AgilePokerBackEndWS extends AgilePokerModule {
 
   def moduleDeps = Seq(AgilePokerPublic)

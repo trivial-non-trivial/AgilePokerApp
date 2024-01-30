@@ -2,8 +2,11 @@ package app
 
 import cask.Logger.Console.globalLogger
 import upickle.default.{ReadWriter => RW, macroRW}
+//import model.RoomState
 
 object Websockets extends cask.MainRoutes{
+
+//  val r: RoomState = ???
 
   @cask.get("/hi")
   def hello() = {
@@ -19,7 +22,7 @@ object Websockets extends cask.MainRoutes{
         case cask.Ws.Text("q!") => channel.send(cask.Ws.Close())
         case cask.Ws.Text(data) =>
           println(data)
-          channel.send(cask.Ws.Text(upickle.default.write(User(roomId + " " + data, "????"))))
+          channel.send(cask.Ws.Text(upickle.default.write(User(roomId + " --- " + data, "????"))))
       }
     }
   }
