@@ -9,15 +9,15 @@ import org.scalajs.dom.{HTMLButtonElement, HTMLInputElement, MouseEvent}
 object ActionHandler {
 
   def clicActionEnterRoom(appContainer:  dom.Element,
-                 ws: WebSocket[User, User],
+                 ws: WebSocket[Data, Data],
                  inputElement: ReactiveHtmlElement[HTMLInputElement],
                  enterButton:  ReactiveHtmlElement[HTMLButtonElement],
                  userName: Var[String],
-                 roomId: Var[String]):  EventListener[MouseEvent, User]  = {
+                 roomId: Var[String]):  EventListener[MouseEvent, Data]  = {
     onClick.map(_ => {
       userName.set(inputElement.ref.value)
       DomAction.renderDom(appContainer, ws, inputElement, enterButton, userName)
-      User(s"${roomId.now()}*${inputElement.ref.value}", "UID_00001")
+      Data(User(s"${roomId.now()}*${inputElement.ref.value}", "UID_00002"), Room(Seq.empty))
     }) --> ws.send
   }
 

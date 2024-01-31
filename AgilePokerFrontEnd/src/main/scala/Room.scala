@@ -1,1 +1,1 @@
-case class Room(s: String)
+case class Room(users: Seq[User])
