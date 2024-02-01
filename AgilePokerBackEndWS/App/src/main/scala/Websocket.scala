@@ -1,12 +1,17 @@
 package app
 
 import cask.Logger.Console.globalLogger
-import upickle.default.{ReadWriter => RW, macroRW}
+import upickle.default._
+import ImplicitCodec._
+
+import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 //import model.RoomState
 
 object Websockets extends cask.MainRoutes{
 
-//  val r: RoomState = ???
+  val states: mutable.Map[String, RoomState] = mutable.Map.empty
+  states.addOne("1234" -> RoomState(Room(Seq.empty)))
 
   @cask.get("/hi")
   def hello() = {
@@ -17,12 +22,21 @@ object Websockets extends cask.MainRoutes{
   def enterRoom(roomId: String): cask.WebsocketResult = {
 
     println(s"in WS for roomId : $roomId")
+
     cask.WsHandler { channel =>
       cask.WsActor {
         case cask.Ws.Text("q!") => channel.send(cask.Ws.Close())
-        case cask.Ws.Text(data) =>
-          println(data)
-          channel.send(cask.Ws.Text(upickle.default.write(User(roomId + " --- " + data, "????"))))
+        case cask.Ws.Text(json) =>
+          val user: User = read[User](json)
+
+          if (!states.apply(roomId).room.users.contains(user)){
+            val usersCur: Seq[User] = states.apply(roomId).room.users
+            states.addOne(roomId -> RoomState(Room(usersCur.appended(user))))
+          }
+
+          val data: Data = Data(user, states.apply(roomId).room)
+          println(s"data = $data")
+          channel.send(cask.Ws.Text(upickle.default.write(data)))
       }
     }
   }
@@ -30,21 +44,17 @@ object Websockets extends cask.MainRoutes{
   @cask.websocket("/room/:roomId/:userName")
   def enterRoom(userName: String, roomId: String): cask.WebsocketResult = {
 
-    println(s"in WS in room : $roomId with user $userName")
     cask.WsHandler { channel =>
       cask.WsActor {
         case cask.Ws.Text("q!") => channel.send(cask.Ws.Close())
-        case cask.Ws.Text(data) =>
-          println(data)
-          channel.send(cask.Ws.Text(upickle.default.write(User(roomId + " " + data, "????"))))
+        case cask.Ws.Text(json) =>
+          val user: User = read[User](json)
+          val data: Data = Data(user, Room(Seq(user)))
+          println(s"data = $data")
+          channel.send(cask.Ws.Text(upickle.default.write(data)))
       }
     }
   }
 
   initialize()
-}
-
-case class User(userName: String, userId: String)
-object User{
-  implicit val rw: RW[User] = macroRW
 }

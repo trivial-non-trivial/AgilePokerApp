@@ -6,14 +6,14 @@ import org.scalajs.dom.{HTMLButtonElement, HTMLInputElement}
 
 object DomAction {
   def renderDom(appContainer:  dom.Element,
-                ws: WebSocket[Data, Data],
+                ws: WebSocket[Data, User],
                 inputElement: ReactiveHtmlElement[HTMLInputElement],
                 enterButton:  ReactiveHtmlElement[HTMLButtonElement],
                 userName: Var[String]): Unit = {
     render(appContainer, createContent(ws, inputElement, enterButton, userName))
   }
 
-  def createContent(ws: WebSocket[Data, Data],
+  def createContent(ws: WebSocket[Data, User],
                     inputElement: ReactiveHtmlElement[HTMLInputElement],
                     enterButton: ReactiveHtmlElement[HTMLButtonElement],
                     userName: Var[String]): Div = {
@@ -31,9 +31,15 @@ object DomAction {
           enterButton,
           div(h3("Connected : ", child.text <-- ws.isConnected)),
         ))
-      case _ => {
-        div(label(child.text <--ws.received.map(data => data.user.userName)))
-      }
+      case _ => div(
+        div(h3("response from ws")),
+        div(label(child.text <--ws.received.map(data => {
+          Console.println(data)
+//          data.user.userName
+          data.toString
+        }))),
+        div(h3("--------------"))
+      )
     }
   }
 }

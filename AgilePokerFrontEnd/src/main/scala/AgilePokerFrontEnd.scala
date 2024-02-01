@@ -1,4 +1,4 @@
-import ImplicitCodec.{codecData}
+import ImplicitCodec.{codecData, codecUser}
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.modifiers.EventListener
 import com.raquo.laminar.nodes._
@@ -16,8 +16,8 @@ object AgilePokerFrontEnd {
 
     val appContainer: dom.Element = dom.document.querySelector("#appContainer")
 
-    val ws: WebSocket[Data, Data] =
-      WebSocket.url(s"ws://localhost:8080/connect/${roomId.now()}").json[Data, Data].build()
+    val ws: WebSocket[Data, User] =
+      WebSocket.url(s"ws://localhost:8080/connect/${roomId.now()}").json[Data, User].build()
 
     val enterButton: ReactiveHtmlElement[HTMLButtonElement] =
       ElementBuilder.ButtonBuilder()
@@ -34,7 +34,7 @@ object AgilePokerFrontEnd {
           thisNode => onChange.map(_ => thisNode.ref.value == "") --> disabledEnter
         }
       )
-    val ca: EventListener[MouseEvent, Data] = ActionHandler.clicActionEnterRoom(appContainer, ws, inputElement, enterButton, userName, roomId)
+    val ca: EventListener[MouseEvent, User] = ActionHandler.clicActionEnterRoom(appContainer, ws, inputElement, enterButton, userName, roomId)
     ca.apply(enterButton)
 
     // this is how you render the appElement in the browser
