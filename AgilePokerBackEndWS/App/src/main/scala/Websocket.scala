@@ -51,7 +51,7 @@ object Websockets extends cask.MainRoutes{
           val user: User = read[User](json)
           val data: Data = Data(user, Room(Seq(user)))
           println(s"data = $data")
-          channel.send(cask.Ws.Text(upickle.default.write(data)))
+          channel.send(cask.Ws.Text(write(data)))
       }
     }
   }
