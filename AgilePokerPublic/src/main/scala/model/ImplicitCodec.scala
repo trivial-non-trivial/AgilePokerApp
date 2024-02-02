@@ -1,4 +1,4 @@
-package app
+package main.scala.model
 import upickle.default._
 object ImplicitCodec {
 

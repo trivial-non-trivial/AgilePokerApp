@@ -1,10 +1,11 @@
-import ImplicitCodec.{codecData, codecUser}
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.modifiers.EventListener
 import com.raquo.laminar.nodes._
 import org.scalajs.dom
 import io.laminext.websocket.circe._
 import org.scalajs.dom.{HTMLButtonElement, HTMLInputElement, MouseEvent}
+import main.scala.model.{Data, User}
+import ImplicitCodec.{codecUser, codecData}
 
 object AgilePokerFrontEnd {
 

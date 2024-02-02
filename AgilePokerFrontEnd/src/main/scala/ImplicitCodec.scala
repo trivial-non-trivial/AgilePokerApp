@@ -1,11 +1,12 @@
 import com.raquo.laminar.Implicits
 import io.circe.{Codec, Decoder, Encoder, Json, JsonObject}
+import main.scala.model.{User, Data, Room}
 
 object ImplicitCodec extends Implicits{
 
   implicit val codecUser: Codec[User] = Codec.from(
     Decoder.decodeJsonObject.map(json => User(json("userName").toString,
-                                              json("userId").toString)),
+      json("userId").toString)),
     Encoder.encodeJsonObject.contramap(user => {
       JsonObject.apply(
         "userName" -> Json.fromString(user.userName),
@@ -24,7 +25,7 @@ object ImplicitCodec extends Implicits{
         "users" -> Json.fromValues(room.users.map(codecUser.apply))
       )
     }
-  ))
+    ))
 
   implicit val codecData: Codec[Data] = Codec.from(
     Decoder.decodeJsonObject.map(json =>
@@ -42,5 +43,5 @@ object ImplicitCodec extends Implicits{
         "room" -> codecRoom.apply(data.room)
       )
     }
-  ))
+    ))
 }

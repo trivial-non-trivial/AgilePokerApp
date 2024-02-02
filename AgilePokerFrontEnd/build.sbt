@@ -28,5 +28,6 @@ libraryDependencies ++= Seq(
   "com.raquo" %%% "laminar" % "16.0.0",
   "io.laminext" %%% "websocket" % "0.16.2",
   "io.laminext" %%% "websocket-circe" % "0.16.2",
-  "io.laminext" %%% "fetch-circe" % "0.16.2"
+  "io.laminext" %%% "fetch-circe" % "0.16.2",
+  "com.lihaoyi" %%% "upickle" % "3.1.4"
 )

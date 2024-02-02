@@ -1,4 +1,6 @@
-import mill._, scalalib._
+import mill._
+import os.PathChunk
+import scalalib._
 
 trait AgilePokerModule extends ScalaModule{
   def scalaVersion = "2.13.12"
@@ -8,33 +10,51 @@ trait AgilePokerModule extends ScalaModule{
 //  def moduleDeps = Seq(AgilePokerPublic, AgilePokerBackEndWS, AgilePokerFrontEnd)
 //}
 
-object AgilePokerBackEndWS extends AgilePokerModule {
+object AgilePokerBackEndWSModule extends AgilePokerModule {
 
-  def moduleDeps = Seq(AgilePokerPublic)
+  // Add (or replace) source folders for the module to use
+  override def sources = T.sources {
+    super.sources() ++ Seq(PathRef(build.millSourcePath / "AgilePokerPublic")) ++
+      Seq(PathRef(build.millSourcePath  / Seq("AgilePokerBackEndWS", "App")))
+  }
+
+  override def mainClass = Some("app.Websockets")
 
   override def ivyDeps = Agg(
     ivy"com.lihaoyi::cask:0.9.2",
-    ivy"com.lihaoyi::mill-scalalib:0.11.6"
+    ivy"com.lihaoyi::mill-scalalib:0.11.6",
+    ivy"com.lihaoyi::upickle:3.1.4"
   )
 }
 
-object AgilePokerFrontEnd extends AgilePokerModule {
+object AgilePokerFrontEndModule extends AgilePokerModule {
 
-  def moduleDeps = Seq(AgilePokerPublic)
+  // Add (or replace) source folders for the module to use
+  override def sources = T.sources{
+    super.sources() ++ Seq(PathRef(build.millSourcePath / "AgilePokerPublic"))
+  }
+
+  def optJs() = T.command {
+      os.proc("sbt", "fastOptJS")
+//        .call(stdout = os.Inherit)
+        .call(cwd = T.workspace / "AgilePokerFrontEnd")
+    }
 
   override def ivyDeps = Agg(
     ivy"com.raquo::laminar_sjs1:16.0.0",
     ivy"io.laminext::websocket_sjs1:0.16.2",
     ivy"io.laminext::websocket-circe_sjs1:0.16.2",
-    ivy"io.laminext::fetch-circe_sjs1:0.16.2"
+    ivy"io.laminext::fetch-circe_sjs1:0.16.2",
+    ivy"com.lihaoyi::upickle:3.1.4"
   )
 }
 
-object AgilePokerPublic extends AgilePokerModule {
+trait AgilePokerPublicModule extends AgilePokerModule {
 
   override def ivyDeps = Agg(
     ivy"io.laminext::websocket_sjs1:0.16.2",
     ivy"io.laminext::websocket-circe_sjs1:0.16.2",
-    ivy"io.laminext::fetch-circe_sjs1:0.16.2"
+    ivy"io.laminext::fetch-circe_sjs1:0.16.2",
+    ivy"com.lihaoyi::upickle:3.1.4"
   )
 }

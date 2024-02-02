@@ -2,7 +2,11 @@ package app
 
 import cask.Logger.Console.globalLogger
 import upickle.default._
-import ImplicitCodec._
+import main.scala.model.RoomState
+import main.scala.model.User
+import main.scala.model.Room
+import main.scala.model.Data
+import main.scala.model.ImplicitCodec._
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer

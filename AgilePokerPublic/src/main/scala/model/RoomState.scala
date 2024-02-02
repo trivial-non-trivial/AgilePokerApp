@@ -1,3 +1,4 @@
-package model
+package main.scala.model
+case class RoomState(room: Room) {
 
-case class RoomState()
+}

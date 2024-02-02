@@ -3,6 +3,7 @@ import com.raquo.laminar.nodes.ReactiveHtmlElement
 import io.laminext.websocket.circe.WebSocket
 import org.scalajs.dom
 import org.scalajs.dom.{HTMLButtonElement, HTMLInputElement}
+import main.scala.model.{Data, User}
 
 object DomAction {
   def renderDom(appContainer:  dom.Element,
