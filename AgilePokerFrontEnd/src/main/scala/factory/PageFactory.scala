@@ -21,8 +21,9 @@ object PageFactory {
     ))
 
   def roomFactory(ws: WebSocket[Data, User], users: Var[User]): Div = div(
+    flexDirection := "column",
     div(h3("response from ws")),
-    div(flex := "right", ul(li(child.text <-- users.signal.map(_.userName)))),
+    div(children <-- usersBoxed(ws)),
     div(label(child.text <-- ws.received.map(data => {
       Console.println(data)
       //          data.user.userName
@@ -30,5 +31,9 @@ object PageFactory {
     }))),
     div(h3("--------------"))
   )
+
+  private def usersBoxed(ws: WebSocket[Data, User]): EventStream[List[Div]] =
+    ws.received.map(data =>
+      data.room.users.map(user => div(user.userName.split("\\*").last)).toList)
 
 }

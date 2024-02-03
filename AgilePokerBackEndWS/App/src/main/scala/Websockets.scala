@@ -1,6 +1,7 @@
 package app
 
 import cask.Logger.Console.globalLogger
+import cask.WsChannelActor
 import upickle.default._
 import main.scala.model.RoomState
 import main.scala.model.User
@@ -13,6 +14,7 @@ import scala.collection.mutable
 object Websockets extends cask.MainRoutes{
 
   val states: mutable.Map[String, RoomState] = mutable.Map.empty
+  val channels: mutable.Map[User, WsChannelActor] = mutable.Map.empty
   states.addOne("1234" -> RoomState(Room(Seq.empty)))
 
   @cask.get("/hi")
@@ -34,11 +36,15 @@ object Websockets extends cask.MainRoutes{
           if (!states.apply(roomId).room.users.contains(user)){
             val usersCur: Seq[User] = states.apply(roomId).room.users
             states.addOne(roomId -> RoomState(Room(usersCur.appended(user))))
+            channels.addOne(user, channel)
           }
 
           val data: Data = Data(user, states.apply(roomId).room)
           println(s"data = $data")
-          channel.send(cask.Ws.Text(upickle.default.write(data)))
+          for (user <- states(roomId).room.users) {
+            channels(user).send(cask.Ws.Text(upickle.default.write(data)))
+          }
+
       }
     }
   }
