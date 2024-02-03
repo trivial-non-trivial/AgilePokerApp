@@ -21,7 +21,7 @@ object AgilePokerFrontEnd {
       WebSocket.url(s"ws://localhost:8080/connect/${roomId.now()}").json[Data, User].build()
 
     val enterButton: ReactiveHtmlElement[HTMLButtonElement] =
-      ElementBuilder.ButtonBuilder()
+      builder.ElementBuilder.ButtonBuilder()
         .withLabel("Access room")
         .withRole("button")
         .withClass("button-3")
@@ -35,11 +35,11 @@ object AgilePokerFrontEnd {
           thisNode => onChange.map(_ => thisNode.ref.value == "") --> disabledEnter
         }
       )
-    val ca: EventListener[MouseEvent, User] = ActionHandler.clicActionEnterRoom(appContainer, ws, inputElement, enterButton, userName, roomId)
+    val ca: EventListener[MouseEvent, User] = handler.ActionHandler.clicActionEnterRoom(appContainer, ws, inputElement, enterButton, userName, roomId)
     ca.apply(enterButton)
 
     // this is how you render the appElement in the browser
-    DomAction.renderDom(appContainer, ws, inputElement, enterButton, userName)
+    domAction.DomAction.renderDom(appContainer, ws, inputElement, enterButton, userName)
   }
 }
 

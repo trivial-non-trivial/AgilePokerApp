@@ -1,4 +1,7 @@
+package builder
+
 import com.raquo.laminar.api.L.Var
+import factory.ElementFactory
 
 object ElementBuilder {
 
