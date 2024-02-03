@@ -17,7 +17,7 @@
 - open a terminal for the back
   - install mill (via coursier)
   - move in directory AgilePokerApp
-  - execute the command "mill App"
+  - execute the command "~/.local/share/coursier/bin/mill AgilePokerBackEndWSModule"
 - open a terminal for the front
   - move in directory AgilePokerApp
   - execute the command "~/.local/share/coursier/bin/mill AgilePokerFrontEndModule.fastOpt"

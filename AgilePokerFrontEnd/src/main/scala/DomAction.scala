@@ -1,6 +1,6 @@
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
-import io.laminext.websocket.circe.WebSocket
+import io.laminext.websocket.upickle.WebSocket
 import org.scalajs.dom
 import org.scalajs.dom.{HTMLButtonElement, HTMLInputElement}
 import main.scala.model.{Data, User}

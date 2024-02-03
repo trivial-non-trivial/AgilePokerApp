@@ -43,20 +43,5 @@ object Websockets extends cask.MainRoutes{
     }
   }
 
-  @cask.websocket("/room/:roomId/:userName")
-  def enterRoom(userName: String, roomId: String): cask.WebsocketResult = {
-
-    cask.WsHandler { channel =>
-      cask.WsActor {
-        case cask.Ws.Text("q!") => channel.send(cask.Ws.Close())
-        case cask.Ws.Text(json) =>
-          val user: User = read[User](json)
-          val data: Data = Data(user, Room(Seq(user)))
-          println(s"data = $data")
-          channel.send(cask.Ws.Text(write(data)))
-      }
-    }
-  }
-
   initialize()
 }
