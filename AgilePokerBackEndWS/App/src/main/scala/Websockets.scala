@@ -9,8 +9,6 @@ import main.scala.model.Data
 import main.scala.model.ImplicitCodec._
 
 import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
-//import model.RoomState
 
 object Websockets extends cask.MainRoutes{
 

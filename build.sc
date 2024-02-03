@@ -1,20 +1,17 @@
 import mill._
-import os.PathChunk
 import scalalib._
+import scalajslib._
 
 trait AgilePokerModule extends ScalaModule{
   def scalaVersion = "2.13.12"
 }
 
-//object AgilePokerApp extends AgilePokerModule {
-//  def moduleDeps = Seq(AgilePokerPublic, AgilePokerBackEndWS, AgilePokerFrontEnd)
-//}
-
 object AgilePokerBackEndWSModule extends AgilePokerModule {
 
   // Add (or replace) source folders for the module to use
   override def sources = T.sources {
-    super.sources() ++ Seq(PathRef(build.millSourcePath / "AgilePokerPublic")) ++
+    super.sources() ++
+      Seq(PathRef(build.millSourcePath / "AgilePokerPublic")) ++
       Seq(PathRef(build.millSourcePath  / Seq("AgilePokerBackEndWS", "App")))
   }
 
@@ -27,18 +24,22 @@ object AgilePokerBackEndWSModule extends AgilePokerModule {
   )
 }
 
-object AgilePokerFrontEndModule extends AgilePokerModule {
+object AgilePokerFrontEndModule extends ScalaJSModule with AgilePokerModule {
+
+  def scalaJSVersion = "1.15.0"
 
   // Add (or replace) source folders for the module to use
   override def sources = T.sources{
-    super.sources() ++ Seq(PathRef(build.millSourcePath / "AgilePokerPublic"))
+    super.sources() ++ Seq(PathRef(build.millSourcePath / "AgilePokerPublic")) ++
+      Seq(PathRef(build.millSourcePath / "AgilePokerFrontEnd"))
   }
 
-  def optJs() = T.command {
-      os.proc("sbt", "fastOptJS")
-//        .call(stdout = os.Inherit)
-        .call(cwd = T.workspace / "AgilePokerFrontEnd")
-    }
+  override def mainClass = Some("AgilePokerFrontEnd")
+
+//  def optJs() = T.command {
+//      os.proc("sbt", "fastOptJS")
+//        .call(cwd = T.workspace / "AgilePokerFrontEnd")
+//    }
 
   override def ivyDeps = Agg(
     ivy"com.raquo::laminar_sjs1:16.0.0",
