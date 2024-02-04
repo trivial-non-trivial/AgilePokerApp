@@ -3,6 +3,10 @@
   color: #999999;
 }
 
+#appContainer {
+  background-color:dimgray;
+}
+
 /* BUTTON */
 .button-3 {
   appearance: none;

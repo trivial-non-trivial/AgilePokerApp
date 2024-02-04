@@ -44,10 +44,6 @@ object AgilePokerFrontEndModule extends ScalaJSModule with AgilePokerModule {
   override def fastLinkJS: Target[Report] = {
     val out = super.fastLinkJS
 
-    val srcJs = "out/AgilePokerFrontEndModule/fastLinkJS.dest/main.js"
-    val destJs = "AgilePokerBackEndWS/App/src/main/resources/main.js"
-    os.proc("cp", srcJs, destJs).call()
-
     val srcHtml = "AgilePokerFrontEnd/src/main/resources/index.html"
     val destHtml = "AgilePokerBackEndWS/App/src/main/resources/index.html"
     os.proc("cp", srcHtml, destHtml).call()
@@ -55,6 +51,10 @@ object AgilePokerFrontEndModule extends ScalaJSModule with AgilePokerModule {
     val srcCss = "AgilePokerFrontEnd/src/main/resources/app.css"
     val destCss = "AgilePokerBackEndWS/App/src/main/resources/app.css"
     os.proc("cp", srcCss, destCss).call()
+
+    val srcJs = "out/AgilePokerFrontEndModule/fastLinkJS.dest/main.js"
+    val destJs = "AgilePokerBackEndWS/App/src/main/resources/main.js"
+    os.proc("cp", srcJs, destJs).call()
 
     out
   }

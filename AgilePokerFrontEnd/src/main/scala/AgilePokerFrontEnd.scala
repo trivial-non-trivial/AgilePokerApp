@@ -2,6 +2,7 @@ import com.raquo.laminar.api.L._
 import com.raquo.laminar.modifiers.EventListener
 import com.raquo.laminar.nodes._
 import org.scalajs.dom
+import org.scalajs.dom.window.location
 import org.scalajs.dom.{HTMLButtonElement, HTMLInputElement, MouseEvent}
 import main.scala.model.{Data, User}
 import main.scala.model.ImplicitCodec.{dataRw, userRw}
@@ -9,16 +10,19 @@ import io.laminext.websocket.upickle._
 
 object AgilePokerFrontEnd {
 
-  private val roomId: Var[String] = Var("1234")
   private val userName: Var[String] = Var("")
   private val disabledEnter: Var[Boolean] = Var(true)
 
   def main(args: Array[String]): Unit = {
 
+    println(s"args = $args")
+
+    val roomIdPath: String = location.pathname.split("/").slice(1, 4).mkString("_")
+
     val appContainer: dom.Element = dom.document.querySelector("#appContainer")
 
     val ws: WebSocket[Data, User] =
-      WebSocket.url(s"ws://localhost:8080/connect/${roomId.now()}").json[Data, User].build()
+      WebSocket.url(s"ws://localhost:8080/connect/${roomIdPath}").json[Data, User].build()
 
     val enterButton: ReactiveHtmlElement[HTMLButtonElement] =
       builder.ElementBuilder.ButtonBuilder()
@@ -35,7 +39,7 @@ object AgilePokerFrontEnd {
           thisNode => onChange.map(_ => thisNode.ref.value == "") --> disabledEnter
         }
       )
-    val ca: EventListener[MouseEvent, User] = handler.ActionHandler.clicActionEnterRoom(appContainer, ws, inputElement, enterButton, userName, roomId)
+    val ca: EventListener[MouseEvent, User] = handler.ActionHandler.clicActionEnterRoom(appContainer, ws, inputElement, enterButton, userName, roomIdPath)
     ca.apply(enterButton)
 
     // this is how you render the appElement in the browser
