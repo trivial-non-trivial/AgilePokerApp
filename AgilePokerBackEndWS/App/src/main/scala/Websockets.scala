@@ -17,9 +17,27 @@ object Websockets extends cask.MainRoutes{
   val channels: mutable.Map[User, WsChannelActor] = mutable.Map.empty
   states.addOne("1234" -> RoomState(Room(Seq.empty)))
 
-  @cask.get("/hi")
-  def hello() = {
-    "Hello World!"
+  @cask.staticFiles("/agilePoker/:roomId/index.html",
+    headers = Seq("Accept" -> "text/html",
+                  "Content-Type" -> "text/html"))
+  def index(roomId: String) = {
+    println(roomId)
+    "AgilePokerBackEndWS/App/src/main/resources/index.html"
+  }
+
+  @cask.staticFiles("/agilePoker/:roomId/main.js",
+    headers = Seq("Accept" -> "text/javascript"))
+  def index2(roomId: String) = {
+    println(roomId)
+    "AgilePokerBackEndWS/App/src/main/resources/main.js"
+  }
+
+  @cask.staticFiles("/agilePoker/:roomId/app.css",
+    headers = Seq("Accept" -> "text/css",
+                  "Content-Type" -> "text/css"))
+  def css(roomId: String) = {
+    println(roomId)
+    "AgilePokerBackEndWS/App/src/main/resources/app.css"
   }
 
   @cask.websocket("/connect/:roomId")
