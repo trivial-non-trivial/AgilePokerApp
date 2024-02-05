@@ -80,7 +80,10 @@ object Websockets extends cask.MainRoutes{
                 channels(user).send(cask.Ws.Text(upickle.default.write(data)))
             }
             catch {
-              case e: IOException => channels.remove(user)
+              case e: IOException =>
+                channels.remove(user)
+              case t: Throwable =>
+                channels.remove(user)
             }
           }
 

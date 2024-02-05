@@ -1,5 +1,6 @@
 import mill._
 import mill.scalajslib.api.Report
+import os.home
 import scalalib._
 import scalajslib._
 
@@ -44,19 +45,30 @@ object AgilePokerFrontEndModule extends ScalaJSModule with AgilePokerModule {
   override def fastLinkJS: Target[Report] = {
     val out = super.fastLinkJS
 
+    println("Build:: Done")
+
+    out
+  }
+
+  def buildAndCopy = T {
+
+    println("Build:: " + this.fastLinkJS())
+
     val srcHtml = "AgilePokerFrontEnd/src/main/resources/index.html"
     val destHtml = "AgilePokerBackEndWS/App/src/main/resources/index.html"
     os.proc("cp", srcHtml, destHtml).call()
+    println("Copy :: " + srcHtml)
 
     val srcCss = "AgilePokerFrontEnd/src/main/resources/app.css"
     val destCss = "AgilePokerBackEndWS/App/src/main/resources/app.css"
     os.proc("cp", srcCss, destCss).call()
+    println("Copy :: " + srcCss)
 
     val srcJs = "out/AgilePokerFrontEndModule/fastLinkJS.dest/main.js"
     val destJs = "AgilePokerBackEndWS/App/src/main/resources/main.js"
     os.proc("cp", srcJs, destJs).call()
+    println("Copy :: " + srcJs)
 
-    out
   }
 
   override def ivyDeps = super.ivyDeps() ++ Seq(
