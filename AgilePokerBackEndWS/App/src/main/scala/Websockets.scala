@@ -25,11 +25,14 @@ object Websockets extends cask.MainRoutes{
   var curUID: Int = 1
 
   @cask.staticFiles("/agilePoker/:roomId/:filename",
-    headers = Seq("Accept" -> "text/css, text/javascript, text/html",
-      "Content-Type" -> "text/css, text/javascript, text/html"))
+    headers = Seq("Accept" -> "text/css, text/javascript, text/html, image/png",
+      "Content-Type" -> "text/css, text/javascript, text/html, image/png"))
   def all(roomId: String, filename: String) = {
+    Console.println(filename + " ... " + filename.split("\\.").last)
+
     filename.split("\\.").last match {
       case "css" => s"AgilePokerBackEndWS/App/src/main/resources/styles/$filename"
+      case "png" => s"AgilePokerBackEndWS/App/src/main/resources/cards/$filename"
       case _     => s"AgilePokerBackEndWS/App/src/main/resources/$filename"
     }
 

@@ -27,7 +27,7 @@ object DomAction {
 
     userName.now() match {
       case "" => PageFactory.loginFactory(ws, inputElement, enterButton)
-      case _ => PageFactory.roomFactory(ws, Var(User("Momo", "mkjllkm")))
+      case name => PageFactory.roomFactory(ws, Var(User(name, "UUID")))
     }
   }
 }

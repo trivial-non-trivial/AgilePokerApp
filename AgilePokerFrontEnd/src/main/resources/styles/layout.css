@@ -28,13 +28,18 @@
   background-color:#153694;
 }
 
-.middleLeftRoom {
+.middleCenterRoom {
   display: flex;
   border: dashed grey;
   flex-direction: row;
-  margin-right: auto;
-  margin-left: auto;
-  background-color:#153694;
+  background-color:#353644;
+}
+
+.allCardsLayout {
+  display: flex;
+  border: dashed grey;
+  flex-direction: row;
+  background-color:#658644;
 }
 
 .middleRightRoom {

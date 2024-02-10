@@ -20,7 +20,6 @@
   - execute the command "~/.local/share/coursier/bin/mill AgilePokerBackEndWSModule"
 - open a terminal for the front
   - move in directory AgilePokerApp
-  - execute the commands
-    - "~/.local/share/coursier/bin/mill clean AgilePokerFrontEndModule"
-    - "~/.local/share/coursier/bin/mill AgilePokerFrontEndModule.fastOpt"
+  - execute the command
+    - "~/.local/share/coursier/bin/mill clean AgilePokerFrontEndModule &&  ~/.local/share/coursier/bin/mill AgilePokerFrontEndModule.buildAndCopy"
   - open "AgilePokerFrontEnd/src/main/resources/index.html" in a browser 

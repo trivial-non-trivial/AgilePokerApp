@@ -21,7 +21,7 @@ object PageFactory {
       div(h3("Connected : ", child.text <-- ws.isConnected)),
     ))
 
-  def roomFactory(ws: WebSocket[Data, User], users: Var[User]): Div = div(
+  def roomFactory(ws: WebSocket[Data, User], user: Var[User]): Div = div(
     cls := "layoutRoom",
     div(
       cls := "headerRoom",
@@ -37,7 +37,7 @@ object PageFactory {
       ),
       div(
         cls := "middleCenterRoom",
-        div(canvasTag("hop"))
+        CardFactory.allCardsFactory(user.now(), Seq("demi", "01", "02", "03", "05", "08", "2d", "3d"))
       ),
       div(
         cls := "middleRightRoom",
