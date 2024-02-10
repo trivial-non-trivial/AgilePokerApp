@@ -31,8 +31,24 @@
 .middleCenterRoom {
   display: flex;
   border: dashed grey;
-  flex-direction: row;
+  flex-direction: column;
   background-color:#353644;
+}
+
+.tableLayout {
+  display: flex;
+  border: dashed brown;
+  flex-direction: wrap;
+  flex-wrap: wrap;
+  background-color:#858674;
+}
+
+.playedCard {
+  display: flex;
+  border: dashed black;
+  align-items: center;
+  flex-direction: column;
+  background-color:#521367;
 }
 
 .allCardsLayout {
