@@ -59,9 +59,9 @@ object AgilePokerFrontEndModule extends ScalaJSModule with AgilePokerModule {
     os.proc("cp", srcHtml, destHtml).call()
     println("Copy :: " + srcHtml)
 
-    val srcCss = "AgilePokerFrontEnd/src/main/resources/app.css"
-    val destCss = "AgilePokerBackEndWS/App/src/main/resources/app.css"
-    os.proc("cp", srcCss, destCss).call()
+    val srcCss = "AgilePokerFrontEnd/src/main/resources/styles"
+    val destCss = "AgilePokerBackEndWS/App/src/main/resources/styles"
+    os.proc("cp", "-r", srcCss, destCss).call()
     println("Copy :: " + srcCss)
 
     val srcJs = "out/AgilePokerFrontEndModule/fastLinkJS.dest/main.js"

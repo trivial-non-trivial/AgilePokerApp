@@ -2,6 +2,7 @@ package app
 
 import cask.Logger.Console.globalLogger
 import cask.WsChannelActor
+import cask.util.Ws.Ping
 import upickle.default._
 import main.scala.model.RoomState
 import main.scala.model.User
@@ -10,7 +11,11 @@ import main.scala.model.Data
 import main.scala.model.ImplicitCodec._
 
 import java.io.IOException
+import java.util
+import java.util.concurrent.TimeUnit
 import scala.collection.mutable
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.util.{Failure, Success, Try}
 
 object Websockets extends cask.MainRoutes{
 
@@ -19,24 +24,15 @@ object Websockets extends cask.MainRoutes{
   val UIDs: mutable.Map[String, String] = mutable.Map.empty
   var curUID: Int = 1
 
-  @cask.staticFiles("/agilePoker/:roomId/index.html",
-    headers = Seq("Accept" -> "text/html",
-                  "Content-Type" -> "text/html"))
-  def index(roomId: String) = {
-    "AgilePokerBackEndWS/App/src/main/resources/index.html"
-  }
+  @cask.staticFiles("/agilePoker/:roomId/:filename",
+    headers = Seq("Accept" -> "text/css, text/javascript, text/html",
+      "Content-Type" -> "text/css, text/javascript, text/html"))
+  def all(roomId: String, filename: String) = {
+    filename.split("\\.").last match {
+      case "css" => s"AgilePokerBackEndWS/App/src/main/resources/styles/$filename"
+      case _     => s"AgilePokerBackEndWS/App/src/main/resources/$filename"
+    }
 
-  @cask.staticFiles("/agilePoker/:roomId/main.js",
-    headers = Seq("Accept" -> "text/javascript"))
-  def index2(roomId: String) = {
-    "AgilePokerBackEndWS/App/src/main/resources/main.js"
-  }
-
-  @cask.staticFiles("/agilePoker/:roomId/app.css",
-    headers = Seq("Accept" -> "text/css",
-                  "Content-Type" -> "text/css"))
-  def css(roomId: String) = {
-    "AgilePokerBackEndWS/App/src/main/resources/app.css"
   }
 
   @cask.get("/uid/:userName")
@@ -55,9 +51,12 @@ object Websockets extends cask.MainRoutes{
   @cask.websocket("/connect/:roomId")
   def enterRoom(roomId: String): cask.WebsocketResult = {
 
+    Thread.setDefaultUncaughtExceptionHandler((t: Thread, e: Throwable) => println(s"handler 0 = $t $e"))
+
     println(s"in WS for roomId : $roomId")
     if (!states.contains(roomId)){
       states.addOne(roomId -> RoomState(Room(Seq.empty)))
+
     }
 
     cask.WsHandler { channel =>
@@ -69,24 +68,27 @@ object Websockets extends cask.MainRoutes{
           if (!states.apply(roomId).room.users.contains(user)){
             val usersCur: Seq[User] = states.apply(roomId).room.users
             states.addOne(roomId -> RoomState(Room(usersCur.appended(user))))
+
+          }
+          if (!channels.keys.toList.contains(user)) {
             channels.addOne(user, channel)
           }
 
           val data: Data = Data(user, states.apply(roomId).room)
           println(s"data = $data")
           for (user <- states(roomId).room.users) {
-
-            try {
-                channels(user).send(cask.Ws.Text(upickle.default.write(data)))
+            Try{
+              channels(user).send(cask.Ws.Text(upickle.default.write(data)))
             }
-            catch {
-              case e: IOException =>
+            match{
+              case Failure(exception) =>
+                println(s"$exception")
+                println(s"user = $user is closed")
                 channels.remove(user)
-              case t: Throwable =>
-                channels.remove(user)
+              case Success(value) =>
+                println(s"user = $user is done")
             }
           }
-
       }
     }
   }
