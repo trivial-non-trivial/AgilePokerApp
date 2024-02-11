@@ -13,21 +13,25 @@ object DomAction {
                 ws: WebSocket[Data, User],
                 inputElement: ReactiveHtmlElement[HTMLInputElement],
                 enterButton:  ReactiveHtmlElement[HTMLButtonElement],
-                userName: Var[String]): Unit = {
-    render(appContainer, createContent(ws, inputElement, enterButton, userName))
+                userName: Var[String],
+                userId: Var[String]): Unit = {
+    render(appContainer, createContent(ws, inputElement, enterButton, userName, userId))
   }
 
   def createContent(ws: WebSocket[Data, User],
                     inputElement: ReactiveHtmlElement[HTMLInputElement],
                     enterButton: ReactiveHtmlElement[HTMLButtonElement],
-                    userName: Var[String]): Div = {
+                    userName: Var[String],
+                    userId: Var[String]): Div = {
 
     val appContainer: dom.Element = dom.document.querySelector("#appContainer")
     appContainer.children.foreach(c => appContainer.removeChild(c))
 
+    println("userName " + userName.now())
+
     userName.now() match {
       case "" => PageFactory.loginFactory(ws, inputElement, enterButton)
-      case name => PageFactory.roomFactory(ws, Var(User(name, "UUID")))
+      case name => PageFactory.roomFactory(ws, Var(User(name, userId.now())))
     }
   }
 }

@@ -40,6 +40,8 @@ object Websockets extends cask.MainRoutes{
 
   @cask.get("/uid/:userName")
   def getUID(userName: String): String = {
+    println(s"In getUid for $userName")
+
     if (UIDs.contains(userName)){
       UIDs(userName)
     }

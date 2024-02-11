@@ -41,7 +41,7 @@ object PageFactory {
         child <-- ws.received.map(es =>
           TableFactory.tableFactory(user.now(), RoomState(es.room))
         ),
-        CardFactory.allCardsFactory(user.now(), Seq("quart", "demi", "01", "02", "03", "05", "08", "2d", "3d"))
+        CardFactory.allCardsFactory(user.now(), Seq("quart", "demi", "01", "02", "03", "05", "08", "13"))
       ),
       div(
         cls := "middleRightRoom",
