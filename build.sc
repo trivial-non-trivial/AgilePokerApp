@@ -54,6 +54,11 @@ object AgilePokerFrontEndModule extends ScalaJSModule with AgilePokerModule {
 
     println("Build:: " + this.fastLinkJS())
 
+    val srcIco = "AgilePokerFrontEnd/src/main/resources/favicon.ico"
+    val destIco = "AgilePokerBackEndWS/App/src/main/resources/favicon.ico"
+    os.proc("cp", srcIco, destIco).call()
+    println("Copy :: " + srcIco)
+
     val srcHtml = "AgilePokerFrontEnd/src/main/resources/index.html"
     val destHtml = "AgilePokerBackEndWS/App/src/main/resources/index.html"
     os.proc("cp", srcHtml, destHtml).call()
@@ -70,9 +75,14 @@ object AgilePokerFrontEndModule extends ScalaJSModule with AgilePokerModule {
     println("Copy :: " + srcCards)
 
     val srcJs = "out/AgilePokerFrontEndModule/fastLinkJS.dest/main.js"
-    val destJs = "AgilePokerBackEndWS/App/src/main/resources/main.js"
+    val destJs = "AgilePokerBackEndWS/App/src/main/resources/"
     os.proc("cp", srcJs, destJs).call()
     println("Copy :: " + srcJs)
+
+    val srcJsMap = "out/AgilePokerFrontEndModule/fastLinkJS.dest/main.js.map"
+    val destJsMap = "AgilePokerBackEndWS/App/src/main/resources/"
+    os.proc("cp", srcJsMap, destJsMap).call()
+    println("Copy :: " + srcJsMap)
 
   }
 
