@@ -2,7 +2,6 @@ package app
 
 import cask.Logger.Console.globalLogger
 import cask.WsChannelActor
-import cask.util.Ws.Ping
 import upickle.default._
 import main.scala.model.RoomState
 import main.scala.model.User
@@ -10,11 +9,7 @@ import main.scala.model.Room
 import main.scala.model.Data
 import main.scala.model.ImplicitCodec._
 
-import java.io.IOException
-import java.util
-import java.util.concurrent.TimeUnit
 import scala.collection.mutable
-import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 
 object Websockets extends cask.MainRoutes{
