@@ -2,6 +2,7 @@ package app
 
 import cask.Logger.Console.globalLogger
 import cask.WsChannelActor
+import cask.util.Ws
 import upickle.default._
 import main.scala.model.RoomState
 import main.scala.model.User
@@ -84,6 +85,8 @@ object Websockets extends cask.MainRoutes{
           println(s"data = $data")
           for (user <- states(roomId).room.users) {
             Try{
+              channels(user).run(Ws.Ping("hello".getBytes))
+
               channels(user).send(cask.Ws.Text(upickle.default.write(data)))
             }
             match{
