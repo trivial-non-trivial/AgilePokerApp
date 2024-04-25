@@ -1,6 +1,9 @@
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.modifiers.EventListener
 import com.raquo.laminar.nodes._
+import factory.ElementFactory.{Button, Input}
+import builder.ElementBuilder.{ButtonBuilder, CheckBoxBuilder, InputBuilder}
+import factory.ElementFactory
 import io.laminext.fetch.upickle.FetchResponse
 import org.scalajs.dom
 import org.scalajs.dom.window.location
@@ -18,7 +21,7 @@ object AgilePokerFrontEnd {
 
   def main(args: Array[String]): Unit = {
 
-    println(s"args = $args")
+    //println(s"args = ${args.mkString("Array(", ", ", ")")}")
 
     val roomIdPath: String = location.pathname.split("/").slice(1, 4).mkString("_")
 
@@ -27,21 +30,28 @@ object AgilePokerFrontEnd {
     val ws: WebSocket[Data, User] =
       WebSocket.url(s"ws://localhost:8080/connect/${roomIdPath}").json[Data, User].build()
 
-    val enterButton: ReactiveHtmlElement[HTMLButtonElement] =
-      builder.ElementBuilder.ButtonBuilder()
+    val enterButton: Button =
+      ButtonBuilder()
         .withLabel("Access room")
         .withRole("button")
         .withClass("button-3")
+        // 'disabledEnter' is a Signal modified by a change on 'Input'
+        // and bound to the button in the builder
         .withDisabledVar(disabledEnter)
         .build()
 
-    val inputElement: ReactiveHtmlElement[HTMLInputElement] =
-      input(cls := "form__field",
-        tpe := "text",
-        inContext {
-          thisNode => onChange.map(_ => thisNode.ref.value == "") --> disabledEnter
-        }
-      )
+    def shouldActivate: (Input) => Boolean = {
+      (input : Input) => input.ref.value.equals("")
+    }
+
+    val inputElement: Input =
+      InputBuilder()
+        .withClass("form__field")
+        .withType("text")
+        .withPredicat(shouldActivate)
+        .withDisabledVar(disabledEnter)
+        .build()
+
     val ca: EventListener[MouseEvent, Future[FetchResponse[String]]] = handler.ActionHandler.clicActionEnterRoom(appContainer, ws, inputElement, enterButton, userName, roomIdPath)
     ca.apply(enterButton)
 

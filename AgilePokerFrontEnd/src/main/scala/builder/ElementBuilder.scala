@@ -2,6 +2,7 @@ package builder
 
 import com.raquo.laminar.api.L.Var
 import factory.ElementFactory
+import factory.ElementFactory.Input
 
 object ElementBuilder {
 
@@ -66,5 +67,38 @@ object ElementBuilder {
 
   object ButtonBuilder {
     def apply(): ButtonBuilder = new ButtonBuilder
+  }
+
+  class InputBuilder {
+    private var cls: String = "form__field"
+    private var tpe: String = "text"
+    private var predicat : Input => Boolean = _ => true
+    private var disabledVar: Var[Boolean] = Var(false)
+
+    def withClass(cls: String): InputBuilder = {
+      this.cls = cls
+      this
+    }
+
+    def withType(tpe: String): InputBuilder = {
+      this.tpe = tpe
+      this
+    }
+
+    def withDisabledVar(disabledVar: Var[Boolean]): InputBuilder = {
+      this.disabledVar = disabledVar
+      this
+    }
+    def withPredicat(predicat: Input => Boolean): InputBuilder = {
+      this.predicat = predicat
+      this
+    }
+
+    def build(): ElementFactory.Input =
+      ElementFactory.getInput(cls, tpe, predicat, disabledVar)
+  }
+
+  object InputBuilder {
+    def apply(): InputBuilder = new InputBuilder
   }
 }
