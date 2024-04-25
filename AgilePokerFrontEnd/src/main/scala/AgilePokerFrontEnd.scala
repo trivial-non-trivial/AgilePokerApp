@@ -59,8 +59,3 @@ object AgilePokerFrontEnd {
     domAction.DomAction.renderDom(appContainer, ws, inputElement, enterButton, userName, Var(""))
   }
 }
-
-// 1) Run "fastOptJS" in sbt console to build js file
-// 2) open index.html
-
-// resync project in IDE = ~/.local/share/coursier/bin/mill mill.idea.GenIdea/idea
