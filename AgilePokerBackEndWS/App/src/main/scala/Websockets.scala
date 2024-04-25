@@ -14,10 +14,10 @@ import scala.util.{Failure, Success, Try}
 
 object Websockets extends cask.MainRoutes{
 
-  val states: mutable.Map[String, RoomState] = mutable.Map.empty
-  val channels: mutable.Map[User, WsChannelActor] = mutable.Map.empty
-  val UIDs: mutable.Map[String, String] = mutable.Map.empty
-  var curUID: Int = 1
+  private val states: mutable.Map[String, RoomState] = mutable.Map.empty
+  private val channels: mutable.Map[User, WsChannelActor] = mutable.Map.empty
+  private val UIDs: mutable.Map[String, String] = mutable.Map.empty
+  private var curUID: Int = 1
 
   @cask.staticFiles("/agilePoker/:roomId/:filename",
     headers = Seq("Accept" -> "text/css, text/javascript, text/html, image/png, image/avif,image/webp,*/*",
@@ -76,9 +76,9 @@ object Websockets extends cask.MainRoutes{
             states.addOne(roomId -> RoomState(Room(usersCur.appended(user))))
 
           }
-          if (!channels.keys.toList.contains(user)) {
-            channels.addOne(user, channel)
-          }
+
+          channels.remove(user)
+          channels.addOne(user, channel)
 
           val data: Data = Data(user, states.apply(roomId).room)
           println(s"data = $data")

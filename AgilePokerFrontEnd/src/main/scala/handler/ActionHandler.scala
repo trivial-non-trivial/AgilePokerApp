@@ -44,7 +44,7 @@ object ActionHandler {
             println(s"In callBack with ${userId.now()}")
             DomAction.renderDom(appContainer, ws, inputElement, enterButton, userName, userId)
 
-            ws.sendOne(User(s"${roomId.split("_")(1)}_${inputElement.ref.value}", userId.now()))
+            ws.sendOne(User(s"${inputElement.ref.value}", userId.now()))
           }
           case Failure(_)  => "???"
         }

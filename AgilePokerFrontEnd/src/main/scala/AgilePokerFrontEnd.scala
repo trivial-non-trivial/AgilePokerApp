@@ -52,7 +52,8 @@ object AgilePokerFrontEnd {
         .withDisabledVar(disabledEnter)
         .build()
 
-    val ca: EventListener[MouseEvent, Future[FetchResponse[String]]] = handler.ActionHandler.clicActionEnterRoom(appContainer, ws, inputElement, enterButton, userName, roomIdPath)
+    val ca: EventListener[MouseEvent, Future[FetchResponse[String]]] =
+      handler.ActionHandler.clicActionEnterRoom(appContainer, ws, inputElement, enterButton, userName, roomIdPath)
     ca.apply(enterButton)
 
     // this is how you render the appElement in the browser
