@@ -1,12 +1,14 @@
 import mill._
 import mill.scalajslib.api.Report
-import os.home
+import os.{Path, home}
 import scalalib._
 import scalajslib._
 
 trait AgilePokerModule extends ScalaModule{
   def scalaVersion = T {"2.13.12"}
   def scalaJSVersion = T {"1.13.2"}
+
+  val baseDir: Path = Path(millSourcePath.toNIO.getParent)
 
   override def ivyDeps = Agg(
     ivy"io.laminext::websocket_sjs1:0.16.0",
@@ -21,8 +23,8 @@ object AgilePokerBackEndWSModule extends AgilePokerModule {
   // Add (or replace) source folders for the module to use
   override def sources = T.sources {
     super.sources() ++
-      Seq(PathRef(build.millSourcePath / "AgilePokerPublic")) ++
-      Seq(PathRef(build.millSourcePath  / Seq("AgilePokerBackEndWS", "App")))
+      Seq(PathRef(baseDir / "AgilePokerPublic")) ++
+      Seq(PathRef(baseDir  / Seq("AgilePokerBackEndWS", "App")))
   }
 
   override def mainClass = Some("app.Websockets")
@@ -38,8 +40,8 @@ object AgilePokerFrontEndModule extends ScalaJSModule with AgilePokerModule {
   // Add (or replace) source folders for the module to use
   override def sources = T.sources{
     super.sources() ++
-      Seq(PathRef(build.millSourcePath / "AgilePokerPublic")) ++
-      Seq(PathRef(build.millSourcePath / "AgilePokerFrontEnd"))
+      Seq(PathRef(baseDir / "AgilePokerPublic")) ++
+      Seq(PathRef(baseDir / "AgilePokerFrontEnd"))
   }
 
   override def fastLinkJS: Target[Report] = {
@@ -96,7 +98,7 @@ object AgilePokerPublicModule extends AgilePokerModule {
   // Add (or replace) source folders for the module to use
   override def sources = T.sources {
     super.sources() ++
-      Seq(PathRef(build.millSourcePath / "AgilePokerPublic"))
+      Seq(PathRef(baseDir / "AgilePokerPublic"))
   }
 
 }
