@@ -40,6 +40,7 @@ object ElementFactory {
                ratio: Double
               ): Image =
     img(src := src_,
+        idAttr := src_.split("/").last.split("\\.").head,
         cls := cls_,
         width := s"${200 * ratio}px",
         height := s"${300 * ratio}px",
