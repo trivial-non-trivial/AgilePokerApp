@@ -1,3 +1,3 @@
-package main.scala.model
+package model
 
-case class Room(users: Seq[User])
+case class Room(roomId: String, users: Seq[User])

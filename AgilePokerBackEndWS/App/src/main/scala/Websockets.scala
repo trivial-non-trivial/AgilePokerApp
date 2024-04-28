@@ -4,11 +4,12 @@ import cask.Logger.Console.globalLogger
 import cask.WsChannelActor
 import cask.util.Ws
 import upickle.default._
-import main.scala.model.RoomState
-import main.scala.model.User
-import main.scala.model.Room
-import main.scala.model.Data
-import main.scala.model.ImplicitCodec._
+import upickle.implicits._
+import model.RoomState
+import model.User
+import model.Room
+import model.Data
+import model.ImplicitCodec.{roomRw, dataRw, userRw}
 
 import scala.collection.mutable
 import scala.util.{Failure, Success, Try}
@@ -62,8 +63,7 @@ object Websockets extends cask.MainRoutes{
 
     println(s"in WS for roomId : $roomId")
     if (!states.contains(roomId)){
-      states.addOne(roomId -> RoomState(Room(Seq.empty)))
-
+      states.addOne(roomId -> RoomState(Room(roomId, Seq.empty)))
     }
 
     cask.WsHandler { channel =>
@@ -72,21 +72,22 @@ object Websockets extends cask.MainRoutes{
         case cask.Ws.Text(json) =>
           val user: User = read[User](json)
 
-          if (!states.apply(roomId).room.users.contains(user)){
+          if (!states.apply(roomId).room.users.map(_.userId).contains(user.userId)){
             val usersCur: Seq[User] = states.apply(roomId).room.users
-            states.addOne(roomId -> RoomState(Room(usersCur.appended(user))))
-
+            states.addOne(roomId -> RoomState(Room(roomId, usersCur.appended(user))))
           }
 
           channels.remove(user)
           channels.addOne(user, channel)
 
+          val oldRoom: Room = states.apply(roomId).room
+          val room: Room = oldRoom.copy(users = oldRoom.users.filterNot(_.userId == user.userId).appended(user))
+          states.addOne(roomId -> RoomState(room))
           val data: Data = Data(user, states.apply(roomId).room)
           println(s"data = $data")
           for (user <- states(roomId).room.users) {
             Try{
               channels(user).run(Ws.Ping("hello".getBytes))
-
               channels(user).send(cask.Ws.Text(upickle.default.write(data)))
             }
             match{

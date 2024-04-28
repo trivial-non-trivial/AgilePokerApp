@@ -3,7 +3,7 @@ package domAction
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import io.laminext.websocket.upickle.WebSocket
-import main.scala.model.{Data, User}
+import model.{Data, User, ImplicitCodec, Action}
 import org.scalajs.dom
 import org.scalajs.dom.{HTMLButtonElement, HTMLInputElement}
 import factory.PageFactory
@@ -31,7 +31,7 @@ object DomAction {
 
     userName.now() match {
       case "" => PageFactory.loginFactory(ws, inputElement, enterButton)
-      case name => PageFactory.roomFactory(ws, Var(User(name, userId.now())))
+      case name => PageFactory.roomFactory(ws, Var(User(name, userId.now(), Action[String, String]("in", "out"))))
     }
   }
 }

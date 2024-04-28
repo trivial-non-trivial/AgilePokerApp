@@ -4,7 +4,7 @@ import builder.ElementBuilder
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import io.laminext.websocket.upickle.WebSocket
-import main.scala.model.{Data, Room, RoomState, User}
+import model.{Data, Room, RoomState, User}
 import org.scalajs.dom.{HTMLButtonElement, HTMLInputElement}
 
 object PageFactory {
@@ -35,10 +35,11 @@ object PageFactory {
       ),
       div(
         cls := "middleCenterRoom",
-        child <-- ws.received.map(es =>
-          TableFactory.tableFactory(user.now(), RoomState(es.room))
+        child <-- ws.received.map(es => {
+          TableFactory.tableFactory(user.now(), RoomState(es.room), ws)
+        }
         ),
-        CardFactory.allCardsFactory(user.now(), Seq("quart", "demi", "01", "02", "03", "05", "08", "13"))
+        CardFactory.allCardsFactory(user.now(), Seq("quart", "demi", "01", "02", "03", "05", "08", "13"), ws)
       ),
       div(
         cls := "middleRightRoom",

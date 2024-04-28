@@ -6,12 +6,14 @@ import com.raquo.laminar.api.{enrichSource, eventPropToProcessor}
 import com.raquo.laminar.modifiers.EventListener
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import io.laminext.websocket.upickle.WebSocket
-import main.scala.model.{Data, User}
+import model.{Action, Data, User}
 import org.scalajs.dom
-import org.scalajs.dom.{HTMLButtonElement, HTMLInputElement, MouseEvent}
+import org.scalajs.dom.{Event, HTMLButtonElement, HTMLInputElement, MouseEvent}
 import domAction.DomAction
+import factory.ElementFactory
 import io.laminext.core.ResizeObserverBinders.-->
 import io.laminext.fetch.upickle.{Fetch, FetchResponse}
+import org.scalajs.dom.idb.EventTarget
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -44,10 +46,26 @@ object ActionHandler {
             println(s"In callBack with ${userId.now()}")
             DomAction.renderDom(appContainer, ws, inputElement, enterButton, userName, userId)
 
-            ws.sendOne(User(s"${inputElement.ref.value}", userId.now()))
+            ws.sendOne(User(s"${inputElement.ref.value}", userId.now(), Action[String, String]("in2", "out2")))
           }
           case Failure(_)  => "???"
         }
+      }
+    }
+  }
+
+  def clicActionCard(ws: WebSocket[Data, User],
+                     user: User,
+                     roomId: String):  EventListener[MouseEvent, String]  = {
+    onClick.map(mouseEvent => {
+      println(s"In clicActionCard for ${mouseEvent.target}")
+      ws.sendOne(user.copy(action = Action[String, String]("in3", "selection_done")))
+      mouseEvent.target.toString
+    }) --> {
+      _ => {
+        println(s"In ws.sendOne for ${user}")
+        //DomAction.renderDom(appContainer, ws, inputElement, enterButton, userName, userId)
+
       }
     }
   }

@@ -1,9 +1,10 @@
 package factory
 
 import com.raquo.laminar.api.L._
+import com.raquo.laminar.modifiers.EventListener
 import com.raquo.laminar.nodes.ReactiveHtmlElement
-import main.scala.model.User
-import org.scalajs.dom.{Event, HTMLButtonElement, HTMLDivElement, HTMLImageElement, HTMLInputElement, window}
+import model.User
+import org.scalajs.dom.{Event, HTMLButtonElement, HTMLDivElement, HTMLImageElement, HTMLInputElement, MouseEvent, window}
 
 object ElementFactory {
 
@@ -35,14 +36,14 @@ object ElementFactory {
                cls_ : String = "img-1",
                v : User,
                card: Var[String] = Var(""),
-               actionOnClick: Event => String,
+               actionOnClick: EventListener[MouseEvent, String],
                ratio: Double
               ): Image =
     img(src := src_,
         cls := cls_,
         width := s"${200 * ratio}px",
         height := s"${300 * ratio}px",
-        onClick.map(actionOnClick) --> card)
+        actionOnClick.eventProcessor --> card)
 
   def getInput(cls_ : String = "form__field",
                tpe_ : String = "text",

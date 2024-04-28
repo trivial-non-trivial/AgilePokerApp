@@ -1,3 +1,3 @@
-package main.scala.model
+package model
 
-case class User(userName: String, userId: String)
+case class User(userName: String, userId: String, action: Action[String, String])

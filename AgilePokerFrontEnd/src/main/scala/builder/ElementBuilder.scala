@@ -1,10 +1,12 @@
 package builder
 
-import com.raquo.laminar.api.L.Var
+import com.raquo.laminar.api.L.{Var, onClick}
+import com.raquo.laminar.api.eventPropToProcessor
+import com.raquo.laminar.modifiers.EventListener
 import factory.ElementFactory
 import factory.ElementFactory.Input
-import main.scala.model.User
-import org.scalajs.dom.Event
+import model.User
+import org.scalajs.dom.{Event, MouseEvent}
 
 object ElementBuilder {
 
@@ -110,7 +112,8 @@ object ElementBuilder {
     private var ratio = 1.0
     private var v : User = null
     private var card: Var[String] = Var("")
-    private var actionOnClick: Event => String = event => ""
+    var actionOnClick: EventListener[MouseEvent, String] =
+      new EventListener[MouseEvent, String](onClick.map(_ => ""), _ => ())
 
     def withClass(cls: String): ImageBuilder = {
       this.cls = cls
@@ -132,7 +135,12 @@ object ElementBuilder {
       this.card = card
       this
     }
-    def withActionOnClick(actionOnClick: Event => String): ImageBuilder = {
+    def withActionOnClick(actionOnClick: EventListener[MouseEvent, String]): ImageBuilder = {
+      this.actionOnClick = actionOnClick
+      this
+    }
+
+    def withActionOnClick2(actionOnClick: EventListener[MouseEvent, String]): ImageBuilder = {
       this.actionOnClick = actionOnClick
       this
     }
