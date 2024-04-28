@@ -3,6 +3,8 @@ package builder
 import com.raquo.laminar.api.L.Var
 import factory.ElementFactory
 import factory.ElementFactory.Input
+import main.scala.model.User
+import org.scalajs.dom.Event
 
 object ElementBuilder {
 
@@ -100,5 +102,48 @@ object ElementBuilder {
 
   object InputBuilder {
     def apply(): InputBuilder = new InputBuilder
+  }
+
+  class ImageBuilder {
+    private var cls: String = "playedCard"
+    private var src = s"cards/card_v1_back.png"
+    private var ratio = 1.0
+    private var v : User = null
+    private var card: Var[String] = Var("")
+    private var actionOnClick: Event => String = event => ""
+
+    def withClass(cls: String): ImageBuilder = {
+      this.cls = cls
+      this
+    }
+    def withSrc(src: String): ImageBuilder = {
+      this.src = src
+      this
+    }
+    def withRatio(ratio: Double): ImageBuilder = {
+      this.ratio = ratio
+      this
+    }
+    def withUser(v: User): ImageBuilder = {
+      this.v = v
+      this
+    }
+    def withCard(card: Var[String]): ImageBuilder = {
+      this.card = card
+      this
+    }
+    def withActionOnClick(actionOnClick: Event => String): ImageBuilder = {
+      this.actionOnClick = actionOnClick
+      this
+    }
+
+
+    def build(): ElementFactory.Image =
+      ElementFactory.getImage(src, cls, v, card, actionOnClick, ratio)
+
+  }
+
+  object ImageBuilder {
+    def apply(): ImageBuilder = new ImageBuilder
   }
 }

@@ -26,15 +26,12 @@ object PageFactory {
     cls := "layoutRoom",
     div(
       cls := "headerRoom",
-      div(ElementBuilder.CheckBoxBuilder().withLabel("CB 001").build())
+      div(ElementBuilder.CheckBoxBuilder().withLabel("Display results").build())
     ),
     div(
       cls := "middleRoom",
       div(
-        cls := "middleLeftRoom",
-        div(ElementBuilder.ButtonBuilder().withLabel("b01").build()),
-        div(ElementBuilder.ButtonBuilder().withLabel("b02").build()),
-        div(ElementBuilder.ButtonBuilder().withLabel("b03").build()),
+        cls := "middleLeftRoom"
       ),
       div(
         cls := "middleCenterRoom",
@@ -49,14 +46,7 @@ object PageFactory {
       )
     ),
     div(
-      cls := "footerRoom",
-      div(h3("response from ws"),
-        div(label(child.text <-- ws.received.map(data => {
-          Console.println(data)
-          //          data.user.userName
-          data.toString
-        }))),
-        div(h3("--------------")))
+      cls := "footerRoom"
     )
   )
 

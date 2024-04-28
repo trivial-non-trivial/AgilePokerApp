@@ -34,16 +34,15 @@ object ElementFactory {
   def getImage(src_ : String,
                cls_ : String = "img-1",
                v : User,
-               card: Var[String] = Var("")
+               card: Var[String] = Var(""),
+               actionOnClick: Event => String,
+               ratio: Double
               ): Image =
     img(src := src_,
         cls := cls_,
-        width := s"${200*75/100}px",
-        height := s"${300*75/100}px",
-        onClick.map(event => {
-          println(v + " clicked")
-          "out"
-        }) --> card)
+        width := s"${200 * ratio}px",
+        height := s"${300 * ratio}px",
+        onClick.map(actionOnClick) --> card)
 
   def getInput(cls_ : String = "form__field",
                tpe_ : String = "text",

@@ -1,5 +1,6 @@
 package factory
 
+import builder.ElementBuilder
 import com.raquo.laminar.api.L._
 import main.scala.model.{RoomState, User}
 
@@ -13,19 +14,21 @@ object TableFactory {
   }
 
   private def usersCardBoxed(user: User, state: RoomState): EventStream[List[Div]] = {
+    val ratio = 55.0/100
     val card: Var[String] = Var("")
     EventStream.fromValue(state.room.users.map(v =>  div(
       cls := "playedCard",
       label(v.userName),
-      img(
-        src := s"cards/card_v1_back.png",
-        width := s"${200*75/100}px",
-        height := s"${300*75/100}px",
-        onClick.map(event => {
+      ElementBuilder.ImageBuilder()
+        .withSrc(s"cards/card_v1_back.png")
+        .withClass("playedCard")
+        .withRatio(ratio)
+        .withCard(card)
+        .withActionOnClick(event => {
           println(v + " clicked")
           "out"
-        }) --> card
-      )
+        })
+        .build()
     )).toList)
   }
 
