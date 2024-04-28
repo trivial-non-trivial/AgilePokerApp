@@ -1,0 +1,77 @@
+.layoutRoom {
+  display: flex;
+  border: dashed white;
+  flex-direction: column;
+  background-color:#FFFAF0;
+}
+
+.headerRoom {
+  display: flex;
+  flex-direction: column;
+  background-color:#FFFAF0;
+}
+
+.middleRoom {
+  display: flex;
+  flex-direction: row;
+  background-color:#FFFAF0;
+  margin-left: 5px;
+  margin-left: 5px;
+}
+
+.middleLeftRoom {
+  display: flex;
+  flex-direction: row;
+  background-color:#FFFAF0;
+}
+
+.middleCenterRoom {
+  display: flex;
+  flex-direction: column;
+  background-color:#FFFAF0;
+}
+
+.tableLayout {
+  display: flex;
+  flex-direction: wrap;
+  flex-wrap: wrap;
+  margin: 10px;
+  background-color:#FFFAF0;
+}
+
+.playedCard {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: 5px;
+  background-color:#FFFAF0;
+}
+
+.allCardsLayout {
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+  background-color:#FFFAF0;
+}
+
+.middleRightRoom {
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+  background-color: #FFFAF0;
+}
+
+
+.footerRoom {
+  display: flex;
+  flex-direction: column;
+  background-color:#FFFAF0;
+}
+
+.vbox {
+  display: flex;
+  border: 1px solid GoldenRod;
+  border-spacing: 5px;
+  flex-direction: column;
+  background-color:#FFFAF0;
+}
