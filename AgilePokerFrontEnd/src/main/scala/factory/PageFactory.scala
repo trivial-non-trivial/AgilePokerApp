@@ -21,41 +21,60 @@ object PageFactory {
       div(h3("Connected : ", child.text <-- ws.isConnected)),
     ))
 
-  def roomFactory(ws: WebSocket[Data, User], user: Var[User]): Div = div(
+  def roomFactory(ws: WebSocket[Data, User], user: Var[User]): Div = {
+    val showAll: Var[Boolean] = Var(false)
 
-    cls := "layoutRoom",
     div(
-      cls := "headerRoom",
-      div(ElementBuilder.CheckBoxBuilder().withLabel("Display results").build())
-    ),
-    div(
-      cls := "middleRoom",
+
+      cls := "layoutRoom",
       div(
-        cls := "middleLeftRoom"
+        cls := "headerRoom",
+        div(ElementBuilder.CheckBoxBuilder()
+          .withLabel("Display results")
+          .withVarBool(showAll)
+          .withWs(ws)
+          .withUser(user)
+          .build())
       ),
       div(
-        cls := "middleCenterRoom",
-        child <-- ws.received.map(es => {
-          TableFactory.tableFactory(user.now(), RoomState(es.room), ws)
-        }
+        cls := "middleRoom",
+        div(
+          cls := "middleLeftRoom"
         ),
-        CardFactory.allCardsFactory(user.now(), Seq("quart", "demi", "01", "02", "03", "05", "08", "13"), ws)
+        div(
+          cls := "middleCenterRoom",
+          child <-- ws.received.map(es => {
+            TableFactory.tableFactory(user.now(), RoomState(es.room), ws, showAll)
+          }
+          ),
+          CardFactory.allCardsFactory(user.now(), Seq("quart", "demi", "01", "02", "03", "05", "08", "13"), ws)
+        ),
+        div(
+          cls := "middleRightRoom",
+          div(children <-- usersBoxed(ws, user))
+        )
       ),
       div(
-        cls := "middleRightRoom",
-        div(children <-- usersBoxed(ws))
+        cls := "footerRoom"
       )
-    ),
-    div(
-      cls := "footerRoom"
     )
-  )
+  }
 
-  private def usersBoxed(ws: WebSocket[Data, User]): EventStream[List[Div]] =
-    ws.received.map(data =>
-      data.room.users.map(user =>
-        div(cls := "vbox",
-          div(user.userName.split("\\*").last)))
-          .toList)
+  private def usersBoxed(ws: WebSocket[Data, User], user: Var[User]): EventStream[List[Div]] =
+    ws.received.map(data => {
+      user.set(data.room.users.filter(u => u.userId == user.now().userId).head)
+      data.room.users.sortBy(u => u.userId).map(user =>
+        div(userDisplay(user)))
+          .toList})
+
+
+  private def userDisplay(user: User): Div =
+    div(cls := "hbox",
+      img(src := (if (user.action.result == "None") "others/wait.png" else "others/done.png"),
+        width := s"${50 * 0.5}px",
+        height := s"${50 * 0.5}px"),
+      div(marginLeft := "20px",
+        user.userName.split("\\*").last)
+    )
 
 }

@@ -70,8 +70,16 @@
 
 .vbox {
   display: flex;
-  border: 1px solid GoldenRod;
   border-spacing: 5px;
   flex-direction: column;
+  background-color:#FFFAF0;
+}
+
+.hbox {
+  display: flex;
+  border: 1px solid GoldenRod;
+  border-spacing: 5px;
+  margin: 5px;
+  flex-direction: row;
   background-color:#FFFAF0;
 }

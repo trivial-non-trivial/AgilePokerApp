@@ -3,7 +3,8 @@ package factory
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.modifiers.EventListener
 import com.raquo.laminar.nodes.ReactiveHtmlElement
-import model.User
+import io.laminext.websocket.upickle.WebSocket
+import model.{Data, User}
 import org.scalajs.dom.{Event, HTMLButtonElement, HTMLDivElement, HTMLImageElement, HTMLInputElement, MouseEvent, window}
 
 object ElementFactory {
@@ -14,11 +15,21 @@ object ElementFactory {
   type Input = ReactiveHtmlElement[HTMLInputElement]
 
   def getCheckBox(label_ : String,
+                  varBool: Var[Boolean] = Var(false),
                   cls_ : String = "checkbox-wrapper-14",
                   typ_ : String = "checkbox",
-                  cls_s: String = "switch"): CheckBox =
+                  cls_s: String = "switch",
+                  ws: WebSocket[Data, User],
+                  user: Var[User]): CheckBox =
     div(cls := s"$cls_",
-        input(typ := s"$typ_", cls := s"$cls_s"),
+        input(typ := s"$typ_",
+          cls := s"$cls_s",
+          inContext{ a => onChange.map(event => {
+            println(user)
+            println(user.now())
+            ws.sendOne(user.now())
+            a.ref.checked
+          }) --> varBool}),
         label(s"$label_"))
 
 

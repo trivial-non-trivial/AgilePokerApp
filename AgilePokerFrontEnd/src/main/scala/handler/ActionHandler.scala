@@ -47,7 +47,7 @@ object ActionHandler {
             println(s"In callBack with ${userId.now()}")
             DomAction.renderDom(appContainer, ws, inputElement, enterButton, userName, userId)
 
-            ws.sendOne(User(s"${inputElement.ref.value}", userId.now(), Action[String, String]("in2", "out2")))
+            ws.sendOne(User(s"${inputElement.ref.value}", userId.now(), Action[String, String]("None", "None")))
           }
           case Failure(_)  => "???"
         }
