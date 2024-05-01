@@ -25,8 +25,8 @@ object AgilePokerFrontEnd {
 
     val appContainer: dom.Element = dom.document.querySelector("#appContainer")
 
-    val ws: WebSocket[Data, User] =
-      WebSocket.url(s"ws://localhost:8080/connect/${roomIdPath}").json[Data, User].build()
+    val ws: WebSocket[Data, Data] =
+      WebSocket.url(s"ws://localhost:8080/connect/${roomIdPath}").json[Data, Data].build()
 
     val enterButton: Button =
       ButtonBuilder()
@@ -51,10 +51,10 @@ object AgilePokerFrontEnd {
         .build()
 
     val ca: EventListener[MouseEvent, Future[FetchResponse[String]]] =
-      handler.ActionHandler.clicActionEnterRoom(appContainer, ws, inputElement, enterButton, userName, roomIdPath)
+      handler.ActionHandler.clicActionEnterRoom(appContainer, ws, inputElement, enterButton, userName)
     ca.apply(enterButton)
 
     // this is how you render the appElement in the browser
-    domAction.DomAction.renderDom(appContainer, ws, inputElement, enterButton, userName, Var(""))
+    domAction.DomAction.renderDom(appContainer, ws, inputElement, enterButton, userName, Var(""), null)
   }
 }

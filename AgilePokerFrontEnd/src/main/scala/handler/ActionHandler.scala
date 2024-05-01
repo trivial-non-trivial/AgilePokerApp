@@ -6,7 +6,7 @@ import com.raquo.laminar.api.{enrichSource, eventPropToProcessor}
 import com.raquo.laminar.modifiers.EventListener
 import com.raquo.laminar.nodes.ReactiveHtmlElement
 import io.laminext.websocket.upickle.WebSocket
-import model.{Action, Data, User}
+import model.{Action, Data, Room, User}
 import org.scalajs.dom
 import org.scalajs.dom.{Event, HTMLButtonElement, HTMLImageElement, HTMLInputElement, MouseEvent}
 import domAction.DomAction
@@ -23,11 +23,10 @@ import scala.util.{Failure, Success}
 object ActionHandler {
 
   def clicActionEnterRoom(appContainer:  dom.Element,
-                 ws: WebSocket[Data, User],
+                 ws: WebSocket[Data, Data],
                  inputElement: ReactiveHtmlElement[HTMLInputElement],
                  enterButton:  ReactiveHtmlElement[HTMLButtonElement],
-                 userName: Var[String],
-                 roomId: String):  EventListener[MouseEvent, Future[FetchResponse[String]]]  = {
+                 userName: Var[String]):  EventListener[MouseEvent, Future[FetchResponse[String]]]  = {
     onClick.map(_ => {
       println(s"In ClicActionEnterRoom for ${inputElement.ref.value}")
       userName.set(inputElement.ref.value)
@@ -42,12 +41,15 @@ object ActionHandler {
         println(s"In callBack for ${userName.now()}")
         responseText.onComplete {
           case Success(id) => {
+            val initRoom: Room = null
             println("Success")
             userId.set(id.data)
             println(s"In callBack with ${userId.now()}")
-            DomAction.renderDom(appContainer, ws, inputElement, enterButton, userName, userId)
+            DomAction.renderDom(appContainer, ws, inputElement, enterButton, userName, userId, Var(initRoom))
 
-            ws.sendOne(User(s"${inputElement.ref.value}", userId.now(), Action[String, String]("None", "None")))
+            val newUser = User(s"${inputElement.ref.value}", userId.now(), Action[String, String]("None", "None"))
+            val newDataState = Data(newUser, initRoom)
+            ws.sendOne(newDataState)
           }
           case Failure(_)  => "???"
         }
@@ -55,14 +57,18 @@ object ActionHandler {
     }
   }
 
-  def clicActionCard(ws: WebSocket[Data, User],
+  def clicActionCard(ws: WebSocket[Data, Data],
                      user: User,
-                     roomId: String):  EventListener[MouseEvent, String]  = {
+                     room: Var[Room]):  EventListener[MouseEvent, String]  = {
     onClick.map(mouseEvent => {
      val target = mouseEvent.currentTarget.asInstanceOf[HTMLImageElement]
       println(s"In clicActionCard for ${target.src}")
       val cardName: String = target.src.split("/").last.split("\\.").head
-      ws.sendOne(user.copy(action = Action[String, String](cardName, "selection_done")))
+
+      val newUser = user.copy(action = Action[String, String](cardName, "selection_done"))
+      val newUsers = room.now().users.filterNot(u => u.userId == user.userId).appended(newUser)
+      val newDataState = Data(newUser, room.now().copy(users = newUsers))
+      ws.sendOne(newDataState)
       mouseEvent.target.toString
     }) --> {
       _ => {

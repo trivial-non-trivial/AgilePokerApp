@@ -9,7 +9,7 @@ import org.scalajs.dom.{HTMLButtonElement, HTMLInputElement}
 
 object PageFactory {
 
-  def loginFactory(ws: WebSocket[Data, User],
+  def loginFactory(ws: WebSocket[Data, Data],
                    inputElement: ReactiveHtmlElement[HTMLInputElement],
                    enterButton:  ReactiveHtmlElement[HTMLButtonElement]): Div = div(
     h2("Register in Agile Poker", cls := "h2-1"),
@@ -21,7 +21,7 @@ object PageFactory {
       div(h3("Connected : ", child.text <-- ws.isConnected)),
     ))
 
-  def roomFactory(ws: WebSocket[Data, User], user: Var[User]): Div = {
+  def roomFactory(ws: WebSocket[Data, Data], user: Var[User], room: Var[Room]): Div = {
     val showAll: Var[Boolean] = Var(false)
 
     div(
@@ -34,6 +34,7 @@ object PageFactory {
           .withVarBool(showAll)
           .withWs(ws)
           .withUser(user)
+          .withRoom(room)
           .build())
       ),
       div(
@@ -44,14 +45,17 @@ object PageFactory {
         div(
           cls := "middleCenterRoom",
           child <-- ws.received.map(es => {
-            TableFactory.tableFactory(user.now(), RoomState(es.room), ws, showAll)
+            println(s"## ${es.room}")
+            println(s"## ${es.room.show}")
+            showAll.set(es.room.show)
+            TableFactory.tableFactory(user.now(), es.room, ws)
           }
           ),
           CardFactory.allCardsFactory(user.now(), Seq("quart", "demi", "01", "02", "03", "05", "08", "13"), ws)
         ),
         div(
           cls := "middleRightRoom",
-          div(children <-- usersBoxed(ws, user))
+          div(children <-- usersBoxed(ws, user, room))
         )
       ),
       div(
@@ -60,9 +64,10 @@ object PageFactory {
     )
   }
 
-  private def usersBoxed(ws: WebSocket[Data, User], user: Var[User]): EventStream[List[Div]] =
+  private def usersBoxed(ws: WebSocket[Data, Data], user: Var[User], room: Var[Room]): EventStream[List[Div]] =
     ws.received.map(data => {
       user.set(data.room.users.filter(u => u.userId == user.now().userId).head)
+      room.set(data.room)
       data.room.users.sortBy(u => u.userId).map(user =>
         div(userDisplay(user)))
           .toList})

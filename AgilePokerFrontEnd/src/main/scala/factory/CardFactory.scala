@@ -8,16 +8,16 @@ import model.{Data, Room, RoomState, User}
 
 object CardFactory {
 
-  def allCardsFactory(user: User, values: Seq[String], ws: WebSocket[Data, User]): Div = {
-    val room: Var[Room] = Var(Room("", Seq.empty))
+  def allCardsFactory(user: User, values: Seq[String], ws: WebSocket[Data, Data]): Div = {
+    val room: Var[Room] = Var(Room("", Seq.empty, false))
     ws.received.map(es => es.room) --> room
     div(
       cls := "allCardsLayout",
-      children <-- cardsBoxed(user, values, ws, room.now().roomId)
+      children <-- cardsBoxed(user, values, ws, room)
     )
   }
 
-  private def cardsBoxed(user: User, values: Seq[String], ws: WebSocket[Data, User], roomId: String): EventStream[List[Div]] = {
+  private def cardsBoxed(user: User, values: Seq[String], ws: WebSocket[Data, Data], room: Var[Room]): EventStream[List[Div]] = {
     val ratio = 55.0/100
     val card: Var[String] = Var("")
     EventStream.fromValue(values.map(v =>  div(
@@ -26,7 +26,7 @@ object CardFactory {
         .withClass("playedCard")
         .withRatio(ratio)
         .withCard(card)
-        .withActionOnClick2(ActionHandler.clicActionCard(ws, user, roomId))
+        .withActionOnClick2(ActionHandler.clicActionCard(ws, user, room))
         .build()
     )).toList)
   }

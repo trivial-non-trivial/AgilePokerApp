@@ -63,27 +63,44 @@ object Websockets extends cask.MainRoutes{
 
     println(s"in WS for roomId : $roomId")
     if (!states.contains(roomId)){
-      states.addOne(roomId -> RoomState(Room(roomId, Seq.empty)))
+      states.addOne(roomId -> RoomState(Room(roomId, Seq.empty, false)))
     }
 
     cask.WsHandler { channel =>
       cask.WsActor {
         case cask.Ws.Text("q!") => channel.send(cask.Ws.Close())
         case cask.Ws.Text(json) =>
-          val user: User = read[User](json)
+          println("----- context state -----")
+          println(states)
+          println(states.apply(roomId))
+          println(states.apply(roomId).room)
+          println(states.apply(roomId).room.users)
+          println()
 
-          if (!states.apply(roomId).room.users.map(_.userId).contains(user.userId)){
+          println("----- call state -----")
+          val dataIn: Data = read[Data](json)
+          println(dataIn)
+          val userIn: User = if(dataIn.user.action.input == "None"
+                             && states.apply(roomId).room.users.map(_.userId).contains(dataIn.user.userId)) states.apply(roomId).room.users.find(_.userId == dataIn.user.userId).get
+                             else dataIn.user
+          println(userIn)
+          val roomIn: Room = if(dataIn.room != null) dataIn.room else states.apply(roomId).room
+          println(roomIn)
+          println()
+
+          if (!states.apply(roomId).room.users.map(_.userId).contains(userIn.userId)){
             val usersCur: Seq[User] = states.apply(roomId).room.users
-            states.addOne(roomId -> RoomState(Room(roomId, usersCur.appended(user))))
+            states.addOne(roomId -> RoomState(Room(roomId, usersCur.appended(userIn), roomIn.show)))
           }
 
-          channels.remove(user)
-          channels.addOne(user, channel)
+          channels.remove(userIn)
+          channels.addOne(userIn, channel)
 
           val oldRoom: Room = states.apply(roomId).room
-          val room: Room = oldRoom.copy(users = oldRoom.users.filterNot(_.userId == user.userId).appended(user))
+          val room: Room = oldRoom.copy(users = oldRoom.users.filterNot(_.userId == userIn.userId).appended(userIn),
+            show = roomIn.show)
           states.addOne(roomId -> RoomState(room))
-          val data: Data = Data(user, states.apply(roomId).room)
+          val data: Data = Data(userIn, states.apply(roomId).room)
           println(s"data = $data")
           for (user <- states(roomId).room.users) {
             Try{
@@ -102,6 +119,8 @@ object Websockets extends cask.MainRoutes{
       }
     }
   }
+
+
 
   initialize()
 }

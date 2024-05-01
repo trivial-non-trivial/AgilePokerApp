@@ -6,7 +6,7 @@ import com.raquo.laminar.modifiers.EventListener
 import factory.ElementFactory
 import factory.ElementFactory.Input
 import io.laminext.websocket.upickle.WebSocket
-import model.{Data, User}
+import model.{Data, Room, User}
 import org.scalajs.dom.{Event, MouseEvent}
 
 object ElementBuilder {
@@ -17,8 +17,9 @@ object ElementBuilder {
     private var typ: String = "checkbox"
     private var cls_i: String = "switch"
     private var label: String = "elementBuilder"
-    private var ws: WebSocket[Data, User] = null
+    private var ws: WebSocket[Data, Data] = null
     private var user: Var[User] = null
+    private var room: Var[Room] = null
 
     def withClass(cls : String): CheckBoxBuilder = {
       this.cls = cls
@@ -40,7 +41,7 @@ object ElementBuilder {
       this
     }
 
-    def withWs(ws: WebSocket[Data, User]): CheckBoxBuilder = {
+    def withWs(ws: WebSocket[Data, Data]): CheckBoxBuilder = {
       this.ws = ws
       this
     }
@@ -50,8 +51,13 @@ object ElementBuilder {
       this
     }
 
+    def withRoom(room: Var[Room]): CheckBoxBuilder = {
+      this.room = room
+      this
+    }
+
     def build(): ElementFactory.CheckBox =
-      ElementFactory.getCheckBox(label, varBool, cls, typ, cls_i, ws, user)
+      ElementFactory.getCheckBox(label, varBool, cls, typ, cls_i, ws, user, room)
   }
 
   object CheckBoxBuilder {
