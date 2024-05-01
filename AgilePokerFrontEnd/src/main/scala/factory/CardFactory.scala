@@ -8,8 +8,7 @@ import model.{Data, Room, RoomState, User}
 
 object CardFactory {
 
-  def allCardsFactory(user: User, values: Seq[String], ws: WebSocket[Data, Data]): Div = {
-    val room: Var[Room] = Var(Room("", Seq.empty, false))
+  def allCardsFactory(user: User, values: Seq[String], ws: WebSocket[Data, Data], room: Var[Room]): Div = {
     ws.received.map(es => es.room) --> room
     div(
       cls := "allCardsLayout",

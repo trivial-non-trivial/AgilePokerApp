@@ -51,7 +51,7 @@ object PageFactory {
             TableFactory.tableFactory(user.now(), es.room, ws)
           }
           ),
-          CardFactory.allCardsFactory(user.now(), Seq("quart", "demi", "01", "02", "03", "05", "08", "13"), ws)
+          CardFactory.allCardsFactory(user.now(), Seq("quart", "demi", "01", "02", "03", "05", "08", "13"), ws, room)
         ),
         div(
           cls := "middleRightRoom",
