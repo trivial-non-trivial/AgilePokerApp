@@ -75,10 +75,17 @@ object PageFactory {
 
   private def userDisplay(user: User): Div =
     div(cls := "hbox",
-      img(src := (if (user.action.result == "None") "others/wait.png" else "others/done.png"),
+      img(src := (
+            if (user.connexionClosed) "others/ko.png"
+            else if (user.action.result == "None") {
+              "others/wait.png"
+            } else "others/done.png"),
         width := s"${50 * 0.5}px",
-        height := s"${50 * 0.5}px"),
+        height := s"${50 * 0.5}px",
+        marginTop := "2px",
+        marginLeft := "5px"),
       div(marginLeft := "20px",
+          marginRight := "10px",
         user.userName.split("\\*").last)
     )
 
