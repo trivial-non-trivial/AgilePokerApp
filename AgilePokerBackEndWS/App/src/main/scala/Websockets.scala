@@ -16,6 +16,8 @@ import scala.util.{Failure, Success, Try}
 
 object Websockets extends cask.MainRoutes{
 
+  println(s"\nServing at http://localhost:8080/agilePoker/Room-001/index.html \n")
+
   private val states: mutable.Map[String, RoomState] = mutable.Map.empty
   private val channels: mutable.Map[User, WsChannelActor] = mutable.Map.empty
   private val UIDs: mutable.Map[String, String] = mutable.Map.empty
@@ -25,7 +27,6 @@ object Websockets extends cask.MainRoutes{
     headers = Seq("Accept" -> "text/css, text/javascript, text/html, image/png, image/avif,image/webp,*/*",
       "Content-Type" -> "text/css, text/javascript, text/html, image/png"))
   def all(roomId: String, filename: String) = {
-    Console.println(filename + " ... " + filename.split("\\.").last)
 
     filename.split("\\.").last match {
       case "css" => s"AgilePokerBackEndWS/App/src/main/resources/styles/$filename"
@@ -43,7 +44,6 @@ object Websockets extends cask.MainRoutes{
 
   @cask.get("/uid/:userName")
   def getUID(userName: String): String = {
-    println(s"In getUid for $userName")
 
     if (UIDs.contains(userName)){
       UIDs(userName)
@@ -59,9 +59,6 @@ object Websockets extends cask.MainRoutes{
   @cask.websocket("/connect/:roomId")
   def enterRoom(roomId: String): cask.WebsocketResult = {
 
-    Thread.setDefaultUncaughtExceptionHandler((t: Thread, e: Throwable) => println(s"handler 0 = $t $e"))
-
-    println(s"in WS for roomId : $roomId")
     if (!states.contains(roomId)){
       states.addOne(roomId -> RoomState(Room(roomId, Seq.empty, false)))
     }
@@ -70,23 +67,11 @@ object Websockets extends cask.MainRoutes{
       cask.WsActor {
         case cask.Ws.Text("q!") => channel.send(cask.Ws.Close())
         case cask.Ws.Text(json) =>
-          println("----- context state -----")
-          println(states)
-          println(states.apply(roomId))
-          println(states.apply(roomId).room)
-          println(states.apply(roomId).room.users)
-          println()
-
-          println("----- call state -----")
           val dataIn: Data = read[Data](json)
-          println(dataIn)
           val userIn: User = if(dataIn.user.action.input == "None"
                              && states.apply(roomId).room.users.map(_.userId).contains(dataIn.user.userId)) states.apply(roomId).room.users.find(_.userId == dataIn.user.userId).get
                              else dataIn.user
-          println(userIn)
           val roomIn: Room = if(dataIn.room != null) dataIn.room else states.apply(roomId).room
-          println(roomIn)
-          println()
 
           if (!states.apply(roomId).room.users.map(_.userId).contains(userIn.userId)){
             val usersCur: Seq[User] = states.apply(roomId).room.users
@@ -101,7 +86,6 @@ object Websockets extends cask.MainRoutes{
             show = roomIn.show)
           states.addOne(roomId -> RoomState(room))
           val data: Data = Data(userIn, states.apply(roomId).room)
-          println(s"data = $data")
           for (user <- states(roomId).room.users) {
             Try{
               channels(user).run(Ws.Ping("hello".getBytes))
@@ -109,7 +93,6 @@ object Websockets extends cask.MainRoutes{
             }
             match{
               case Failure(exception) =>
-                println(s"$exception")
                 println(s"user = $user is closed")
                 channels.remove(user)
               case Success(value) =>
