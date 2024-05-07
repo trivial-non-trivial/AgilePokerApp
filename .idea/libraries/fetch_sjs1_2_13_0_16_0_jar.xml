@@ -1,0 +1,10 @@
+<component name="libraryTable">
+    <library name="fetch_sjs1_2.13-0.16.0.jar">
+        <CLASSES>
+            <root url="jar://$PROJECT_DIR$/../../.cache/coursier/v1/https/repo1.maven.org/maven2/io/laminext/fetch_sjs1_2.13/0.16.0/fetch_sjs1_2.13-0.16.0.jar!/"/>
+        </CLASSES>
+        <SOURCES>
+            <root url="jar://$PROJECT_DIR$/../../.cache/coursier/v1/https/repo1.maven.org/maven2/io/laminext/fetch_sjs1_2.13/0.16.0/fetch_sjs1_2.13-0.16.0-sources.jar!/"/>
+        </SOURCES>
+    </library>
+</component>

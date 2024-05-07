@@ -1,0 +1,7 @@
+<component name="libraryTable">
+    <library name="SBT: com.lihaoyi:mill-dev_2.13:0.11.6:jar">
+        <CLASSES>
+            <root url="jar://$PROJECT_DIR$/../../.cache/coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/mill-dev_2.13/0.11.6/mill-dev_2.13-0.11.6.jar!/"/>
+        </CLASSES>
+    </library>
+</component>

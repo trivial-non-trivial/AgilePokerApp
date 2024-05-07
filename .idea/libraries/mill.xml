@@ -1,0 +1,7 @@
+<component name="libraryTable">
+    <library name="mill">
+        <CLASSES>
+            <root url="file://$PROJECT_DIR$/../../.local/share/coursier/bin/mill"/>
+        </CLASSES>
+    </library>
+</component>

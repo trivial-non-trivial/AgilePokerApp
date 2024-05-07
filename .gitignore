@@ -1,4 +1,3 @@
-**/.idea
 **/target
 **/project/project
 **/project/target
@@ -12,3 +11,4 @@
 /AgilePokerBackEndWS/App/src/main/resources/others/done.png
 /AgilePokerBackEndWS/App/src/main/resources/others/ko.png
 /AgilePokerBackEndWS/App/src/main/resources/others/wait.png
+/AgilePokerFrontEnd/src/main/resources/others/ok.png

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/../../out/AgilePokerPublicModule/ideaCompileOutput.dest/classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../AgilePokerPublic">
+      <sourceFolder url="file://$MODULE_DIR$/../../AgilePokerPublic" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../AgilePokerPublicModule">
+      <sourceFolder url="file://$MODULE_DIR$/../../AgilePokerPublicModule/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../AgilePokerPublicModule/resources" type="java-resource" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="airstream_sjs1_2.13-16.0.0.jar" level="project" />
+    <orderEntry type="library" name="core_sjs1_2.13-0.16.0.jar" level="project" />
+    <orderEntry type="library" name="ew_sjs1_2.13-0.1.2.jar" level="project" />
+    <orderEntry type="library" name="fetch-upickle_sjs1_2.13-0.16.0.jar" level="project" />
+    <orderEntry type="library" name="fetch_sjs1_2.13-0.16.0.jar" level="project" />
+    <orderEntry type="library" name="geny_2.13-1.0.0.jar" level="project" />
+    <orderEntry type="library" name="geny_sjs1_2.13-1.0.0.jar" level="project" />
+    <orderEntry type="library" name="laminar_sjs1_2.13-16.0.0.jar" level="project" />
+    <orderEntry type="library" name="scala-library-2.13.12.jar" level="project" />
+    <orderEntry type="library" name="scalajs-dom_sjs1_2.13-2.6.0.jar" level="project" />
+    <orderEntry type="library" name="scalajs-javalib-1.13.2.jar" level="project" />
+    <orderEntry type="library" name="scalajs-library_2.13-1.13.2.jar" level="project" />
+    <orderEntry type="library" name="tuplez-full-light_sjs1_2.13-0.4.0.jar" level="project" />
+    <orderEntry type="library" name="ujson_2.13-3.1.1.jar" level="project" />
+    <orderEntry type="library" name="ujson_sjs1_2.13-3.1.1.jar" level="project" />
+    <orderEntry type="library" name="upack_2.13-3.1.1.jar" level="project" />
+    <orderEntry type="library" name="upack_sjs1_2.13-3.1.1.jar" level="project" />
+    <orderEntry type="library" name="upickle-core_2.13-3.1.1.jar" level="project" />
+    <orderEntry type="library" name="upickle-core_sjs1_2.13-3.1.1.jar" level="project" />
+    <orderEntry type="library" name="upickle-implicits_2.13-3.1.1.jar" level="project" />
+    <orderEntry type="library" name="upickle-implicits_sjs1_2.13-3.1.1.jar" level="project" />
+    <orderEntry type="library" name="upickle_2.13-3.1.1.jar" level="project" />
+    <orderEntry type="library" name="upickle_sjs1_2.13-3.1.1.jar" level="project" />
+    <orderEntry type="library" name="util_sjs1_2.13-0.16.0.jar" level="project" />
+    <orderEntry type="library" name="websocket-upickle_sjs1_2.13-0.16.0.jar" level="project" />
+    <orderEntry type="library" name="websocket_sjs1_2.13-0.16.0.jar" level="project" />
+  </component>
+</module>

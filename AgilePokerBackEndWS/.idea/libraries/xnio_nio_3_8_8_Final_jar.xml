@@ -1,0 +1,10 @@
+<component name="libraryTable">
+    <library name="xnio-nio-3.8.8.Final.jar">
+        <CLASSES>
+            <root url="jar://$PROJECT_DIR$/../../../.cache/coursier/v1/https/repo1.maven.org/maven2/org/jboss/xnio/xnio-nio/3.8.8.Final/xnio-nio-3.8.8.Final.jar!/"/>
+        </CLASSES>
+        <SOURCES>
+            <root url="jar://$PROJECT_DIR$/../../../.cache/coursier/v1/https/repo1.maven.org/maven2/org/jboss/xnio/xnio-nio/3.8.8.Final/xnio-nio-3.8.8.Final-sources.jar!/"/>
+        </SOURCES>
+    </library>
+</component>

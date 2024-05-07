@@ -1,0 +1,10 @@
+<component name="libraryTable">
+    <library name="scalajs-javalib-1.13.2.jar">
+        <CLASSES>
+            <root url="jar://$PROJECT_DIR$/../../../.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-js/scalajs-javalib/1.13.2/scalajs-javalib-1.13.2.jar!/"/>
+        </CLASSES>
+        <SOURCES>
+            <root url="jar://$PROJECT_DIR$/../../../.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-js/scalajs-javalib/1.13.2/scalajs-javalib-1.13.2-sources.jar!/"/>
+        </SOURCES>
+    </library>
+</component>
